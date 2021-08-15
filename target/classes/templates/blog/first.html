@@ -1,0 +1,10 @@
+<p xmlns:th="http://www.w3.org/1999/xhtml">index</p>
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <ul th:each="blog:${Blog}">
+        <li th:text="${blog.blogid}">1</li>
+        <li th:text="${blog.blogtitle}">2</li>
+        <li th:text="${blog.blogtext}">3</li>
+    </ul>
+</div>
+
+

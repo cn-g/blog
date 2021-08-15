@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gcp.demo.user.dao.UserDao">
+    <resultMap id="userMap" type="com.gcp.demo.user.entity.User">
+        <id column="uid" property="uid"/>
+        <result column="uname" property="uname"/>
+        <result column="upwd" property="upwd"/>
+        <result column="usex" property="usex"/>
+        <result column="ubirthday" property="ubirthday" javaType="java.sql.Date"/>
+        <result column="uimg" property="uimg"/>
+        <result column="ucode" property="ucode"/>
+    </resultMap>
+    <select id="selectAll" resultMap="userMap">
+        select uid,uname,upwd,usex,ubirthday,ucode
+        from usrs
+    </select>
+    <select id="selectByUid" resultMap="userMap">
+        select uid,uname,upwd,usex,ubirthday,ucode,uimg
+        from usrs
+        where uid = '${uid}'
+    </select>
+    <select id="selectByUname" resultMap="userMap">
+        select uid,uname,upwd,usex,ubirthday,uimg,ucode
+        from usrs
+        where ucode='${ucode}' and upwd='${upwd}'
+    </select>
+    <update id="updateuser">
+        update usrs
+        set
+        uname =
+    </update>
+
+    <insert id="insertUser" >
+        insert into usrs(uname,upwd,usex,ubirthday,uimg,ucode)
+        values
+        (#{uname},#{upwd},#{usex},#{ubirthday},#{uimg},#{ucode})
+    </insert>
+</mapper>

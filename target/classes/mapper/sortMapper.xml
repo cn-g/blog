@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gcp.demo.sort.dao.SortDao">
+    <resultMap id="sortMap" type="com.gcp.demo.sort.entity.Sort">
+            <id column="sid" property="sid"/>
+            <result column="sname" property="sname"/>
+    </resultMap>
+
+
+    <select id="selectBySort" resultMap="sortMap">
+        select sid,sname
+        from sort
+        where sid = #{sid}
+        limit 0,4
+    </select>
+
+</mapper>

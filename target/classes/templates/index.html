@@ -1,0 +1,10 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+</head>
+<body>
+<p th:if="${pa}">用户存在</p>
+<p th:if="!${pa}">不存在</p>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+        .login{
+            margin: 0 auto;
+            margin-top: 100px;
+            width: 500px;
+            height: 300px;
+            /* border: #000000 solid 1px; */
+            position: absolute;
+            top: 30px; bottom: 0;
+            left: 0; right: 0;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, .3);
+            box-shadow: 3px 3px 6px 3px rgba(0, 0, 0, .3);
+        }
+        .select{
+            width: 50%;
+        }
+        .backedit{
+            list-style: none;
+            color: #000000;
+            margin-left: 20px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+</head>
+<body>
+<div id="" class="login">
+    <form class="form-horizontal" style="margin-top: 70px;" th:each="blog:${blog}" action="/publish">
+        <div class="form-group">
+            <input type="hidden" name="bid" th:value="blog.blogid">
+            <input type="hidden" name="uid">
+            <label class="col-sm-2 control-label">标题</label>
+            <div class="col-sm-10">
+                <p class="form-control-static"><span th:text="${blog.blogtitle}"></span></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">类别</label>
+            <select name="sid"class="form-control" style="width: 70%;">
+                <option value="1">JAVA</option>
+                <option value="2">CSS</option>
+                <option value="3">Linux</option>
+                <option value="4">其它</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success" style="margin-left: 45%;">发布</button>
+    </form>
+    <a href="#" class="backedit">返回之前的页面</a>
+</div>
+</body>
+</html>

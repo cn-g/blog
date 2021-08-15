@@ -1,0 +1,98 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>img</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background-image:url("../img/login2.jpeg");
+            background-repeat:no-repeat;
+            -webkit-background-size: cover;
+            /* 背景自适应 */
+            background-position: center 0;
+        }
+        .login{
+            margin: 0 500px;
+            margin-top: 100px;
+            width: 500px;
+            height: 350px;
+            /* border: #000000 solid 1px; */
+            position: absolute;
+            top: 30px; bottom: 0;
+            left: 0; right: 0;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, .3);
+            box-shadow: 3px 3px 6px 3px rgba(0, 0, 0, .3);
+        }
+        form{
+            margin-top: 30px;
+            margin-left: 14px;
+        }
+        h2{
+            text-align: center;
+        }
+        .imgcontent{
+            margin: 0 auto;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .img{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+<body>
+<script src="js/data.js"></script>
+<div class="login">
+    <h2>图片显示</h2>
+    <form class="form-horizontal" method="post" action="/img" enctype="multipart/form-data">
+        <div class="imgcontent" >
+            <input type="file" class="file" name="file" style="display: none;"/>
+            <span id="img">
+					<img src="img/login.jpeg"  id="uimg" class="img" width="50px"height="50px" onclick="javascript:$('.file').click();"/>
+				</span>
+            <span class="glyphicon glyphicon-pencil" id="upd"style="position: relative;top: -36px;left: 16px;font-size: 20px;" onclick="javascript:$('.file').click();"></span>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-left: 200px;">
+                <button type="submit" class="btn btn-success">&nbsp;&nbsp;&nbsp;&nbsp;修改&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    //选择图片随后同步显示
+    $('.file').change(function (e){
+        var imgurl = window.URL || window.webkitURL;
+        var file,img;
+        if(file = this.files[0]){
+            img = new Image();
+            img.onload = function(){
+                $('.img').attr('src',this.src);
+            }
+            img.src = imgurl.createObjectURL(file);
+        }
+    })
+    //默认隐藏
+    window.onload = function(){
+        $('#upd').hide();
+    }
+    //鼠标移出隐藏
+    $('.imgcontent').mouseout(function(){
+        $('#upd').hide();
+    })
+    //鼠标移入显示
+    $('.imgcontent').mouseover(function(){
+        $('#upd').show();
+    })
+</script>
+</body>
+</html>

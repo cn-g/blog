@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            background-image:url("/img/login2.jpeg");
+            background-repeat:no-repeat;
+            -webkit-background-size: cover;
+            /* 背景自适应 */
+            background-position: center 0;
+        }
+        .login{
+            margin: 0 800px;
+            margin-top: 100px;
+            width: 500px;
+            height: 300px;
+            /* border: #000000 solid 1px; */
+            position: absolute;
+            top: 30px; bottom: 0;
+            left: 0; right: 0;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, .3);
+            /*模糊玻璃效果*/
+            box-shadow: 3px 3px 6px 3px rgba(0, 0, 0, .3);
+        }
+        form{
+            margin-top: 30px;
+            margin-left: 14px;
+        }
+        h2{
+            text-align: center;
+        }
+        .torgt{
+            margin-left: 50%;
+            margin-top: auto;
+        }
+    </style>
+    <!--    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />-->
+    <link rel="stylesheet" href="../css/bootstrap.min.css"  />
+</head>
+<body>
+<div class="login">
+    <h2>用户登录</h2>
+    <form class="form-horizontal" method="post" action="/login">
+        <div class="form-group" >
+            <label for="inputuid" class="col-sm-2 control-label">账号：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputuid" name="usercode" style="width: 90%;" th:placeholder="${usermessage}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">密码：</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword3" name="password" style="width: 90%;" th:placeholder="${pwdmessage}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="display: flex">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"> Remember me
+                    </label>
+                </div>
+                <div class="torgt">
+                    <a href="/toregister">注册</a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-left: 200px;">
+                <button type="submit" class="btn btn-success">&nbsp;&nbsp;&nbsp;&nbsp;登录&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

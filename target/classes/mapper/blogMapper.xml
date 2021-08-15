@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gcp.demo.blog.dao.BlogDao">
+    <resultMap id="blogMap" type="com.gcp.demo.blog.entity.Blog">
+        <id column="blogid" property="blogid"/>
+        <result column="blogtitle" property="blogtitle"/>
+        <result column="bloghtml" property="bloghtml"/>
+        <result column="blogtext" property="blogtext"/>
+        <collection property="user" ofType="com.gcp.demo.user.entity.User">
+            <id column="uid" property="uid"/>
+            <result column="uname" property="uname"/>
+            <result column="upwd" property="upwd"/>
+            <result column="usex" property="usex"/>
+            <result column="ubirthday" property="ubirthday" javaType="java.sql.Date"/>
+            <result column="uimg" property="uimg"/>
+            <result column="ucode" property="ucode"/>
+        </collection>
+        <collection property="sort" ofType="com.gcp.demo.sort.entity.Sort">
+            <id column="sid" property="sid"/>
+            <result column="sname" property="sname"/>
+        </collection>
+    </resultMap>
+
+    <insert id="insertblog" parameterType="com.gcp.demo.blog.entity.Blog">
+        insert into blog(blogtitle,blogtext,uid,bloghtml,sid)
+        values
+        (#{blog.blogtitle},#{blog.blogtext},#{user.uid},#{blog.bloghtml},#{sort.sid})
+    </insert>
+
+    <select id="selectblogBySort" resultMap="blogMap">
+        select blogid,uid,sid,blogtitle,bloghtml,blogtext
+        from blog
+        where sid = #{sid}
+        limit 0,4
+    </select>
+
+</mapper>

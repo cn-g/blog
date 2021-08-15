@@ -1,0 +1,12 @@
+<div class="list-group" style="font-size: 17px;" th:each="sweb:${sweb}">
+    <!--    <th:block th:each="sjava:${sjava}">-->
+    <a href="#" class="list-group-item">
+        <h2 class="list-group-item-heading" th:text="${sweb.blogtitle}"></h2>
+        <p class="list-group-item-text" id="webtext" th:text="${sweb.blogtext}"></p>
+    </a>
+    <!--    </th:block>-->
+</div>
+<script>
+    //setTimeout('jsLine(1.5,$("[id=javatext]"))',2000);
+    //jsLine(1.5,$("[id=javatext]"));
+</script>
