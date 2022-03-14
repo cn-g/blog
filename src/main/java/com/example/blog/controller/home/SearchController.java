@@ -26,7 +26,7 @@ public class SearchController {
 
     @PostMapping("/addSearch")
     @ApiOperation("添加搜索关键字接口")
-    public ResponseModelDto addChannel(@RequestBody AddSearchReqDto reqDto){
+    public ResponseModelDto addSearch(@RequestBody AddSearchReqDto reqDto){
         if(searchService.addSearch(reqDto)){
             return ResponseModels.ok();
         }else{
@@ -36,7 +36,7 @@ public class SearchController {
 
     @PostMapping("/updateSearch")
     @ApiOperation("修改搜索关键字接口")
-    public ResponseModelDto updateChannel(@RequestBody UpdateSearchReqDto reqDto){
+    public ResponseModelDto updateSearch(@RequestBody UpdateSearchReqDto reqDto){
         if(searchService.updateSearch(reqDto)){
             return ResponseModels.ok();
         }else{
