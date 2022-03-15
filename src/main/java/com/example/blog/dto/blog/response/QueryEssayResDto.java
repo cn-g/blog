@@ -21,6 +21,12 @@ public class QueryEssayResDto {
     @ApiModelProperty(value = "用户id")
     private String userId;
 
+    @ApiModelProperty(value = "用户昵称")
+    private String name;
+
+    @ApiModelProperty(value = "用户头像")
+    private String userPicUrl;
+
     @ApiModelProperty(value = "类目id")
     private String categoryId;
 

@@ -1,17 +1,16 @@
 package com.example.blog.controller.user;
 
-import com.example.blog.dto.IdAndNameDto;
 import com.example.blog.dto.user.request.AddAccountReqDto;
 import com.example.blog.dto.user.request.QueryAccountReqDto;
 import com.example.blog.dto.user.request.UpdateAccountReqDto;
 import com.example.blog.dto.user.response.AccountResDto;
 import com.example.blog.dto.user.response.QueryAccountResDto;
 import com.example.blog.service.user.AccountService;
+import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
-import com.github.xiaoymin.knife4j.spring.plugin.OperationDynamicResponseModelProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;

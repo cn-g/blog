@@ -1,7 +1,5 @@
-package com.example.blog.dto.home.response;
+package com.example.blog.dto.home.request;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,8 +11,8 @@ import java.time.LocalDateTime;
  * @author Admin
  */
 @Data
-@ApiModel("分页查询热门博客出参")
-public class QueryRecommendResDto {
+@ApiModel("修改热门博客入参")
+public class UpdateRecommendReqDto {
 
     @ApiModelProperty(value = "id")
     private String id;
@@ -56,19 +54,5 @@ public class QueryRecommendResDto {
     )
     @ApiModelProperty(value = "展示日期")
     private LocalDateTime day;
-
-    @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "GMT+8"
-    )
-    @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
-
-    @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "GMT+8"
-    )
-    @ApiModelProperty(value = "更新时间")
-    private LocalDateTime updateTime;
 
 }

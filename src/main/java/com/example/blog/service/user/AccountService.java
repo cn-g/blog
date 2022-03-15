@@ -6,14 +6,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.user.AccountMapper;
-import com.example.blog.dto.IdAndNameDto;
 import com.example.blog.dto.user.request.AddAccountReqDto;
 import com.example.blog.dto.user.request.QueryAccountReqDto;
 import com.example.blog.dto.user.request.UpdateAccountReqDto;
 import com.example.blog.dto.user.response.AccountResDto;
 import com.example.blog.dto.user.response.QueryAccountResDto;
-import com.example.blog.entity.blog.Category;
 import com.example.blog.entity.user.Account;
+import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.util.ParamUtil;
@@ -134,10 +133,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
         List<Account> accountList = baseMapper.selectList(Wrappers.lambdaQuery(Account.class).eq(Account::getStatus,1));
         List<IdAndNameDto> list = Lists.newArrayList();
         accountList.forEach(a->{
-            IdAndNameDto idAndNameDto = new IdAndNameDto();
-            idAndNameDto.setId(a.getId());
-            idAndNameDto.setName(a.getAccount());
-            list.add(idAndNameDto);
+            list.add(new IdAndNameDto().setId(a.getId()).setName(a.getAccount()));
         });
         return list;
     }

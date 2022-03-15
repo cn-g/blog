@@ -1,9 +1,9 @@
 package com.example.blog.controller.user;
 
-import com.example.blog.dto.IdAndNameDto;
 import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.QueryRoleResDto;
 import com.example.blog.service.user.RoleService;
+import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.response.PageableResponseModelDto;

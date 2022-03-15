@@ -1,10 +1,10 @@
 package com.example.blog.controller.blog;
 
-import com.example.blog.dto.IdAndNameDto;
 import com.example.blog.dto.blog.request.*;
 import com.example.blog.dto.blog.response.QueryEssayResDto;
 import com.example.blog.entity.blog.Essay;
 import com.example.blog.service.blog.EssayService;
+import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;

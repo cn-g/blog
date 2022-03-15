@@ -6,17 +6,20 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.blog.EssayMapper;
-import com.example.blog.dto.IdAndNameDto;
+import com.example.blog.service.user.UserService;
+import com.gcp.basicproject.base.IdAndNameDto;
 import com.example.blog.dto.blog.request.*;
 import com.example.blog.dto.blog.response.QueryEssayResDto;
 import com.example.blog.entity.blog.Essay;
 import com.example.blog.entity.user.Account;
+import com.example.blog.service.user.AccountService;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +28,12 @@ import java.util.List;
  */
 @Service
 public class EssayService extends ServiceImpl<EssayMapper, Essay> {
+
+    @Resource
+    private AccountService accountService;
+
+    @Resource
+    private UserService userService;
 
     /**
      * 添加博客
@@ -98,7 +107,10 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
      */
     public QueryEssayResDto getEssay(IdRequestDto reqDto){
         Essay essay = baseMapper.selectById(reqDto.getId());
-        return ToolsUtil.convertType(essay,QueryEssayResDto.class);
+        QueryEssayResDto queryEssayResDto = ToolsUtil.convertType(essay,QueryEssayResDto.class);
+        queryEssayResDto.setName(accountService.getAccount(new IdRequestDto().setId(queryEssayResDto.getUserId())).getAccount());
+        queryEssayResDto.setUserPicUrl(userService.getUser(new IdRequestDto().setId(queryEssayResDto.getUserId())).getPicUrl());
+        return queryEssayResDto;
     }
 
     /**
