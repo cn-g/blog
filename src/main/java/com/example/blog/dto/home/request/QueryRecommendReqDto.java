@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -16,10 +17,13 @@ import java.time.LocalDateTime;
 public class QueryRecommendReqDto extends AbstractPageableSearchDto {
 
     @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
+            pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
     @ApiModelProperty(value = "展示日期")
-    private LocalDateTime day;
+    private LocalDate day;
+
+    @ApiModelProperty(value = "状态，1启用0禁用")
+    private Integer status;
 
 }

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -32,6 +33,10 @@ public class AddRecommendReqDto {
     @ApiModelProperty(value = "博主头像")
     private String blogUserPic;
 
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty(value = "博客发布时间")
     private LocalDateTime blogTime;
 
@@ -42,10 +47,10 @@ public class AddRecommendReqDto {
     private Integer status;
 
     @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
+            pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
     @ApiModelProperty(value = "展示日期")
-    private LocalDateTime day;
+    private LocalDate day;
 
 }

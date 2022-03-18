@@ -30,7 +30,7 @@ public class History {
     @ApiModelProperty(value = "关键词")
     private String keyWord;
 
-    @TableField(value = "_id")
+    @TableField(value = "blog_user_id")
     @ApiModelProperty(value = "用户id")
     private String blogUserId;
 

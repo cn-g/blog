@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.blog.EssayMapper;
+import com.example.blog.enums.BlogStatusEnum;
+import com.example.blog.enums.EssayLabelEnum;
 import com.example.blog.service.user.UserService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.example.blog.dto.blog.request.*;
@@ -131,6 +133,23 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
             list.add(idAndNameDto);
         });
         return list;
+    }
+
+    /**
+     * 获取用户的总浏览量
+     * @param userId
+     * @return
+     */
+    public Integer getViewNumberByUserId(String userId){
+        List<Essay> essayList = baseMapper.selectList(Wrappers.lambdaQuery(Essay.class)
+                .eq(Essay::getUserId,userId)
+                .eq(Essay::getLabel, EssayLabelEnum.PUBLISH.getCode())
+                .ne(Essay::getStatus, BlogStatusEnum.DELETE.getCode()));
+        Integer number = 0;
+        for (Essay essay : essayList) {
+            number = number + essay.getViewNumber();
+        }
+        return number;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.blog.controller.user;
 
+import com.example.blog.dto.home.request.UpdateUserRecommendReqDto;
 import com.example.blog.dto.user.request.QueryUserReqDto;
 import com.example.blog.dto.user.response.QueryUserResDto;
 import com.example.blog.dto.user.request.AddUserReqDto;
@@ -68,6 +69,12 @@ public class UserController {
     @ApiOperation("查询用户信息")
     public ResponseModelDto<QueryUserResDto> getUser(IdRequestDto idRequestDto){
         return ResponseModels.ok(userService.getUser(idRequestDto));
+    }
+
+    @GetMapping("/getUserRecommendByUserId")
+    @ApiOperation("获取用户详情通过用户id")
+    public ResponseModelDto<UpdateUserRecommendReqDto> getUserRecommendByUserId(IdRequestDto requestDto){
+        return ResponseModels.ok(userService.getUserRecommendByUserId(requestDto.getId()));
     }
 
 }

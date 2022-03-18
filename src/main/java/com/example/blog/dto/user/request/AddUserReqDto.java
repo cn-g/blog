@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 @ApiModel("添加用户信息入参类")
 public class AddUserReqDto {
 
+    @ApiModelProperty(value = "用户id")
+    private String id;
+
     @ApiModelProperty(value = "用户姓名")
     private String realName;
 

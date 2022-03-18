@@ -9,11 +9,13 @@ import com.example.blog.dto.home.request.*;
 import com.example.blog.dto.home.response.*;
 import com.example.blog.entity.home.History;
 import com.example.blog.entity.home.Search;
+import com.example.blog.service.user.AccountService;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 /**
@@ -21,6 +23,9 @@ import java.time.LocalDateTime;
  */
 @Service
 public class HistoryService extends ServiceImpl<HistoryMapper, History> {
+
+    @Resource
+    private AccountService accountService;
 
     /**
      * 添加历史关键字
@@ -69,7 +74,14 @@ public class HistoryService extends ServiceImpl<HistoryMapper, History> {
             queryWrapper.eq(History::getStatus,reqDto.getStatus());
         }
         Page<History> historyPage = baseMapper.selectPage(reqDto.iPageInfo(),queryWrapper.ne(History::getStatus,9));
-        return ToolsUtil.convertType(historyPage,QueryHistoryResDto.class);
+        IPage<QueryHistoryResDto> queryHistoryResDtoIPage = ToolsUtil.convertType(historyPage,QueryHistoryResDto.class);
+        int i = 0;
+        for (QueryHistoryResDto record : queryHistoryResDtoIPage.getRecords()) {
+            record.setBlogUserName(accountService.getAccount(new IdRequestDto().setId(record.getBlogUserId())).getAccount());
+            queryHistoryResDtoIPage.getRecords().set(i,record);
+            i++;
+        }
+        return queryHistoryResDtoIPage.setRecords(queryHistoryResDtoIPage.getRecords());
     }
 
     /**

@@ -8,6 +8,7 @@ import com.gcp.basicproject.util.RedisUtil;
 import com.gcp.basicproject.util.RequestUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import com.google.common.collect.Lists;
+import lombok.Synchronized;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ public class LogAspect {
     RedisUtil redisUtil;
 
     @Pointcut("execution(* com.example.blog.controller.*.*.*(..))")
+    @Synchronized
     public void controllerMethod(){}
 
     @Before("controllerMethod()")

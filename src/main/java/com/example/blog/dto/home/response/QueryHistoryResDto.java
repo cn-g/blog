@@ -7,6 +7,7 @@ import com.gcp.basicproject.base.AbstractPageableSearchDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  * @author Admin
  */
 @Data
+@Accessors(chain = true)
 @ApiModel("分页查询历史出参")
 public class QueryHistoryResDto extends AbstractPageableSearchDto {
 
@@ -25,6 +27,9 @@ public class QueryHistoryResDto extends AbstractPageableSearchDto {
 
     @ApiModelProperty(value = "用户id")
     private String blogUserId;
+
+    @ApiModelProperty(value = "用户昵称")
+    private String blogUserName;
 
     @ApiModelProperty(value = "状态，0隐藏、1显示、9删除")
     private Integer status;

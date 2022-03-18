@@ -6,11 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.user.AccountMapper;
-import com.example.blog.dto.user.request.AddAccountReqDto;
-import com.example.blog.dto.user.request.QueryAccountReqDto;
-import com.example.blog.dto.user.request.UpdateAccountReqDto;
-import com.example.blog.dto.user.response.AccountResDto;
-import com.example.blog.dto.user.response.QueryAccountResDto;
+import com.example.blog.dto.user.request.*;
+import com.example.blog.dto.user.response.*;
 import com.example.blog.entity.user.Account;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
@@ -129,8 +126,8 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
      * id和name集
      * @return
      */
-    public List<IdAndNameDto> getAccountData(){
-        List<Account> accountList = baseMapper.selectList(Wrappers.lambdaQuery(Account.class).eq(Account::getStatus,1));
+    public List<IdAndNameDto> getAccountData(String name){
+        List<Account> accountList = baseMapper.selectList(Wrappers.lambdaQuery(Account.class).eq(Account::getStatus,1).like(Account::getAccount,name));
         List<IdAndNameDto> list = Lists.newArrayList();
         accountList.forEach(a->{
             list.add(new IdAndNameDto().setId(a.getId()).setName(a.getAccount()));

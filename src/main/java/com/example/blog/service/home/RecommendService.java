@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class RecommendService extends ServiceImpl<RecommendMapper, Recommend> {
 
     /**
-     * 添加轮播
+     * 添加热门博客
      * @param reqDto
      * @return
      */
@@ -34,7 +34,7 @@ public class RecommendService extends ServiceImpl<RecommendMapper, Recommend> {
     }
 
     /**
-     * 修改轮播
+     * 修改热门博客
      * @param reqDto
      * @return
      */
@@ -45,7 +45,7 @@ public class RecommendService extends ServiceImpl<RecommendMapper, Recommend> {
     }
 
     /**
-     * 删除轮播
+     * 删除热门博客
      * @param reqDto
      * @return
      */
@@ -57,7 +57,7 @@ public class RecommendService extends ServiceImpl<RecommendMapper, Recommend> {
     }
 
     /**
-     * 分页查询轮播
+     * 分页查询热门博客
      * @param reqDto
      * @return
      */
@@ -66,12 +66,15 @@ public class RecommendService extends ServiceImpl<RecommendMapper, Recommend> {
         if(ParamUtil.notEmpty(reqDto.getDay())){
             queryWrapper.eq(Recommend::getDay,reqDto.getDay());
         }
+        if(ParamUtil.notEmpty(reqDto.getStatus())){
+            queryWrapper.eq(Recommend::getStatus,reqDto.getStatus());
+        }
         Page<Recommend> recommendPage = baseMapper.selectPage(reqDto.iPageInfo(),queryWrapper.ne(Recommend::getStatus,9));
         return ToolsUtil.convertType(recommendPage,QueryRecommendResDto.class);
     }
 
     /**
-     * 查询轮播
+     * 查询热门博客
      * @param reqDto
      * @return
      */

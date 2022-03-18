@@ -5,6 +5,7 @@ import com.gcp.basicproject.base.IdRequestDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  * @author Admin
  */
 @Data
+@Accessors(chain = true)
 @ApiModel("分页查询列表图出参类")
 public class QueryChannelResDto extends IdRequestDto {
 

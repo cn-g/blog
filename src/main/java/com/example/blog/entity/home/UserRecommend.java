@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -51,7 +52,7 @@ public class UserRecommend {
 
     @TableField(value = "day")
     @ApiModelProperty(value = "展示日期")
-    private LocalDateTime day;
+    private LocalDate day;
 
     @TableField(value = "create_time")
     @ApiModelProperty(value = "创建时间")

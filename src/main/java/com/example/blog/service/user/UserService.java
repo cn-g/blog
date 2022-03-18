@@ -6,12 +6,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.user.UserMapper;
-import com.example.blog.dto.user.request.AddUserReqDto;
-import com.example.blog.dto.user.request.QueryUserReqDto;
-import com.example.blog.dto.user.response.QueryUserResDto;
-import com.example.blog.dto.user.request.UpdateUserReqDto;
+import com.example.blog.dto.home.request.AddUserRecommendReqDto;
+import com.example.blog.dto.user.request.*;
+import com.example.blog.dto.user.response.*;
+import com.example.blog.dto.home.request.*;
 import com.example.blog.entity.user.Account;
 import com.example.blog.entity.user.User;
+import com.example.blog.service.blog.EssayService;
 import com.gcp.basicproject.base.AbstractPageableSearchDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.CommonException;
@@ -19,6 +20,7 @@ import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 /**
@@ -27,6 +29,13 @@ import java.time.LocalDateTime;
 @Service
 public class UserService extends ServiceImpl<UserMapper, User>{
 
+    @Resource
+    private AccountService accountService;
+
+    @Resource
+    private EssayService essayService;
+
+
     /**
      * 添加用户信息
      * @param reqDto
@@ -34,7 +43,9 @@ public class UserService extends ServiceImpl<UserMapper, User>{
      */
     public Boolean addUser(AddUserReqDto reqDto){
         User user = ToolsUtil.convertType(reqDto,User.class);
-        user.setId(ToolsUtil.getUUID());
+        if(ParamUtil.notEmpty(baseMapper.selectById(reqDto.getId()))){
+            throw new CommonException("该用户已存在");
+        }
         user.setCreateTime(LocalDateTime.now());
         return baseMapper.insert(user) > 0;
     }
@@ -94,6 +105,22 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         user.setStatus(9);
         user.setUpdateTime(LocalDateTime.now());
         return baseMapper.updateById(user) > 0;
+    }
+
+    /**
+     * 通过用户id查询用户详情
+     * @param userId
+     * @return
+     */
+    public UpdateUserRecommendReqDto getUserRecommendByUserId(String userId){
+        AccountResDto accountResDto = accountService.getAccount(new IdRequestDto().setId(userId));
+        User user = baseMapper.selectById(userId);
+        Integer number = essayService.getViewNumberByUserId(userId);
+        return new UpdateUserRecommendReqDto().setBlogUserId(userId)
+                .setBlogUserName(accountResDto.getAccount())
+                .setBlogUserPic(user.getPicUrl())
+                .setBlogUserDesc(user.getSynopsis())
+                .setPageViews(number);
     }
 
 }
