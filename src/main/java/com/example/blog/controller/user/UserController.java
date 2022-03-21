@@ -14,6 +14,7 @@ import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
 @RestController
 @Api(value = "用户信息接口",tags = "用户信息接口")
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     @Resource
@@ -74,6 +76,7 @@ public class UserController {
     @GetMapping("/getUserRecommendByUserId")
     @ApiOperation("获取用户详情通过用户id")
     public ResponseModelDto<UpdateUserRecommendReqDto> getUserRecommendByUserId(IdRequestDto requestDto){
+        log.info("idrequest={}",requestDto);
         return ResponseModels.ok(userService.getUserRecommendByUserId(requestDto.getId()));
     }
 

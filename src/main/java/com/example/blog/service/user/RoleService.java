@@ -69,7 +69,7 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> {
     public IPage<QueryRoleResDto> queryRolePage(QueryRoleReqDto reqDto){
         LambdaQueryWrapper<Role> queryWrapper = Wrappers.lambdaQuery(Role.class);
         if(ParamUtil.notEmpty(reqDto.getName())){
-            queryWrapper.like(Role::getRoleDec,reqDto.getName());
+            queryWrapper.like(Role::getName,reqDto.getName());
         }
         if(ParamUtil.notEmpty(reqDto.getStatus())){
             queryWrapper.eq(Role::getStatus,reqDto.getStatus());
@@ -82,8 +82,8 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> {
      * id和name集
      * @return
      */
-    public List<IdAndNameDto> getRoleData(){
-        List<Role> roleList = baseMapper.selectList(Wrappers.lambdaQuery(Role.class).eq(Role::getStatus,1));
+    public List<IdAndNameDto> getRoleData(String name){
+        List<Role> roleList = baseMapper.selectList(Wrappers.lambdaQuery(Role.class).eq(Role::getStatus,1).like(Role::getName,name));
         return ToolsUtil.convertType(roleList,IdAndNameDto.class);
     }
 

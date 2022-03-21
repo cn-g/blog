@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * @author Admin
  */
 @RestController
-@Api(value = "频道信息接口",tags = "频道信息接口")
+@Api(value = "轮播图信息接口",tags = "轮播图信息接口")
 @RequestMapping("/channel")
 public class ChannelController {
 

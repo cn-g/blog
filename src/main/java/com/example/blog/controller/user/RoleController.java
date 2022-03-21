@@ -65,8 +65,8 @@ public class RoleController {
 
     @GetMapping("/getRoleData")
     @ApiOperation("获取角色信息接口")
-    public ResponseModelDto<List<IdAndNameDto>> queryRoleData(){
-        return ResponseModels.ok(roleService.getRoleData());
+    public ResponseModelDto<List<IdAndNameDto>> queryRoleData(@RequestParam String name){
+        return ResponseModels.ok(roleService.getRoleData(name));
     }
 
 }

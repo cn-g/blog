@@ -17,6 +17,9 @@ public class QueryUserResDto {
     @ApiModelProperty(value = "用户id")
     private String id;
 
+    @ApiModelProperty(value = "账号")
+    private String account;
+
     @ApiModelProperty(value = "用户姓名")
     private String realName;
 

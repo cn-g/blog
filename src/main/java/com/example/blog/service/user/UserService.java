@@ -65,6 +65,12 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         }
         Page<User> userPage = baseMapper.selectPage(reqDto.iPageInfo(), queryWrapper.ne(User::getStatus,9).orderByDesc(User::getCreateTime));
         IPage<QueryUserResDto> queryUserResDtoIPage = ToolsUtil.convertType(userPage,QueryUserResDto.class);
+        int i = 0;
+        for (QueryUserResDto record : queryUserResDtoIPage.getRecords()) {
+            record.setAccount(accountService.getAccount(new IdRequestDto().setId(record.getId())).getAccount());
+            queryUserResDtoIPage.getRecords().set(i,record);
+            i++;
+        }
         return queryUserResDtoIPage;
     }
 
@@ -118,9 +124,9 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         Integer number = essayService.getViewNumberByUserId(userId);
         return new UpdateUserRecommendReqDto().setBlogUserId(userId)
                 .setBlogUserName(accountResDto.getAccount())
-                .setBlogUserPic(user.getPicUrl())
-                .setBlogUserDesc(user.getSynopsis())
-                .setPageViews(number);
+                .setBlogUserPic(ParamUtil.notEmpty(user.getPicUrl())?user.getPicUrl():null)
+                .setBlogUserDesc(ParamUtil.notEmpty(user.getSynopsis())?user.getSynopsis():null)
+                .setPageViews(ParamUtil.notEmpty(number)?number:0);
     }
 
 }

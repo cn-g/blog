@@ -73,7 +73,7 @@ public class AccountController {
 
     @GetMapping("/getAccountData")
     @ApiOperation("类目下拉接口")
-    public ResponseModelDto<List<IdAndNameDto>> getAccountData(String name){
+    public ResponseModelDto<List<IdAndNameDto>> getAccountData(@RequestParam String name){
         return ResponseModels.ok(accountService.getAccountData(name));
     }
 

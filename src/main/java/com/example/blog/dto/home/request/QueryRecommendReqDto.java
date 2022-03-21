@@ -5,6 +5,7 @@ import com.gcp.basicproject.base.AbstractPageableSearchDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,9 +17,8 @@ import java.time.LocalDateTime;
 @ApiModel("查询热门博客入参")
 public class QueryRecommendReqDto extends AbstractPageableSearchDto {
 
-    @JsonFormat(
-            pattern = "yyyy-MM-dd",
-            timezone = "GMT+8"
+    @DateTimeFormat(
+            pattern = "yyyy-MM-dd"
     )
     @ApiModelProperty(value = "展示日期")
     private LocalDate day;

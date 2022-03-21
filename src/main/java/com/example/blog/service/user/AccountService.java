@@ -9,10 +9,16 @@ import com.example.blog.dao.user.AccountMapper;
 import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.*;
 import com.example.blog.entity.user.Account;
+import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.LoginReqDto;
+import com.gcp.basicproject.base.LoginResponseDto;
 import com.gcp.basicproject.response.CommonException;
+import com.gcp.basicproject.response.ResponseModelDto;
+import com.gcp.basicproject.response.ResponseModels;
 import com.gcp.basicproject.util.ParamUtil;
+import com.gcp.basicproject.util.RedisUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
@@ -27,7 +33,7 @@ import java.util.List;
 @Service
 public class AccountService extends ServiceImpl<AccountMapper, Account> {
 
-    private static LocalDateTime now = LocalDateTime.now();
+    private static final String key = "cache_token_";
 
     @Resource
     private UserService userService;
@@ -35,16 +41,19 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
     @Resource
     private RoleService roleService;
 
+    @Resource
+    private RedisUtil redisUtil;
+
     /**
      * 添加账号
      * @param reqDto
      * @return
      */
     public Boolean addAccount(AddAccountReqDto reqDto){
-        checkUser(reqDto.getAccount(),null);
+        checkUser(reqDto.getAccount(),"");
         Account account = ToolsUtil.convertType(reqDto,Account.class);
         account.setId(ToolsUtil.getUUID());
-        account.setCreateTime(now);
+        account.setCreateTime(LocalDateTime.now());
         account.setRoleName(roleService.getRole(reqDto.getRoleId()).getName());
         account.setPassword(ToolsUtil.getPasswordToMD5(reqDto.getPassword()));
         account.setStatus(1);
@@ -60,7 +69,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
         checkUser(reqDto.getAccount(),reqDto.getId());
         Account account = ToolsUtil.convertType(reqDto,Account.class);
         account.setRoleName(roleService.getRole(reqDto.getRoleId()).getName());
-        account.setUpdateTime(now);
+        account.setUpdateTime(LocalDateTime.now());
         return baseMapper.updateById(account) > 0;
     }
 
@@ -72,6 +81,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
     public Boolean deleteAccount(IdRequestDto reqDto){
         Account account = baseMapper.selectById(reqDto.getId());
         account.setStatus(9);
+        account.setUpdateTime(LocalDateTime.now());
         userService.deleteUser(reqDto);
         return baseMapper.updateById(account) > 0;
     }
@@ -115,7 +125,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
      */
     public void checkUser(String account,String id){
         if(ParamUtil.notEmpty(baseMapper.selectList(Wrappers.lambdaQuery(Account.class)
-                .ne(Account::getStatus,9)
+                .ne(Account::getStatus,BlogStatusEnum.DELETE.getCode())
                 .eq(Account::getAccount,account)
                 .ne(Account::getId,id)))){
             throw new CommonException("该用户名已存在");
@@ -133,6 +143,26 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
             list.add(new IdAndNameDto().setId(a.getId()).setName(a.getAccount()));
         });
         return list;
+    }
+
+    /**
+     * 登录接口
+     * @param reqDto
+     * @return
+     */
+    public ResponseModelDto<LoginResponseDto> login(LoginReqDto reqDto){
+        Account account = baseMapper.selectOne(Wrappers.lambdaQuery(Account.class)
+                .eq(Account::getAccount,reqDto.getAccount())
+                .eq(Account::getPassword,ToolsUtil.getPasswordToMD5(reqDto.getPassword()))
+                .eq(Account::getStatus, BlogStatusEnum.ENABLE.getCode()));
+        if(ParamUtil.empty(account)){
+            return ResponseModels.loginException();
+        }else{
+            LoginResponseDto loginResponseDto = ToolsUtil.convertType(account,LoginResponseDto.class);
+            loginResponseDto.setToken(loginResponseDto.getId());
+            redisUtil.set(key+loginResponseDto.getId(),loginResponseDto.getToken(),10*60*6);
+            return ResponseModels.ok(loginResponseDto);
+        }
     }
 
 }

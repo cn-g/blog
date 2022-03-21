@@ -54,25 +54,31 @@ public class LogAspect {
                 ToolsUtil.getServerIp(),joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
         //添加需要过滤的接口
         List<String > noToken = Lists.newArrayList();
-        noToken.add("addUser");
-        noToken.add("queryUserPage");
+        noToken.add("login");
         //过滤接口
-//        if(!ParamUtil.equals(joinPoint.getSignature().getName(),noToken)){
-//            //接口之前,权限校验
-//            String key = "cache_token_"+ RequestUtil.getUserId();
-//            if(ParamUtil.empty(redisUtil.get(key))){
-//                log.info("接口调用失败:返回结果=" + ResponseCode.NoAuthor.toString());
-//                log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
-//                throw new CommonException(ResponseCode.NoAuthor.getMessage(),ResponseCode.NoAuthor.getMessage_en(),ResponseCode.NoAuthor.getErrorCode());
-//            }
-//            if(!Objects.equals(RequestUtil.getToken(), redisUtil.get(key))){
-//                log.info("接口调用失败:返回结果=" + ResponseCode.NOPOWER.toString());
-//                log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
-//                throw new CommonException(ResponseCode.NOPOWER.getMessage(),ResponseCode.NOPOWER.getMessage_en(),ResponseCode.NOPOWER.getErrorCode());
-//            }
-//            //刷新token存活时间
-//            redisUtil.expire(key,4*60*60);
-//        }
+        if(!ParamUtil.equals(joinPoint.getSignature().getName(),noToken)){
+            //接口之前,权限校验
+            String token = "cache_token_" + RequestUtil.getUserId();
+            String role = "cache_role_" + RequestUtil.getRole();
+            if(ParamUtil.empty(redisUtil.get(token)) || ParamUtil.empty(redisUtil.get(role))){
+                log.info("接口调用失败:返回结果=" + ResponseCode.NoAuthor);
+                log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
+                throw new CommonException(ResponseCode.NoAuthor.getMessage(),ResponseCode.NoAuthor.getMessage_en(),ResponseCode.NoAuthor.getErrorCode());
+            }
+            if(!Objects.equals(RequestUtil.getToken(), redisUtil.get(token))){
+                log.info("接口调用失败:返回结果=" + ResponseCode.NoAuthor);
+                log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
+                throw new CommonException(ResponseCode.NoAuthor.getMessage(),ResponseCode.NoAuthor.getMessage_en(),ResponseCode.NoAuthor.getErrorCode());
+            }
+            String[] url = redisUtil.get(role).toString().split("\\,");
+            if(!Arrays.asList(url).contains(request.getRequestURL().toString())){
+                log.info("接口调用失败:返回结果=" + ResponseCode.NOPOWER);
+                log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
+                throw new CommonException(ResponseCode.NOPOWER.getMessage(),ResponseCode.NOPOWER.getMessage_en(),ResponseCode.NOPOWER.getErrorCode());
+            }
+            //刷新token存活时间
+            redisUtil.expire(token,10*60*6);
+        }
     }
 
     /**
