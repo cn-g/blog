@@ -14,11 +14,16 @@ import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.util.ParamUtil;
+import com.gcp.basicproject.util.RedisUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Admin
@@ -26,8 +31,13 @@ import java.time.LocalDateTime;
 @Service
 public class UrlService extends ServiceImpl<UrlMapper, Url> {
 
+    private static final String role = "cache_role_";
+
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     /**
      * 添加接口
@@ -101,6 +111,18 @@ public class UrlService extends ServiceImpl<UrlMapper, Url> {
             i++;
         }
         return iPage;
+    }
+
+    /**
+     * 保存接口权限到redis
+     */
+    public void addUrlRoleToRedis(){
+        Map<String, List<Url>> map = baseMapper.selectList(Wrappers.lambdaQuery(Url.class).eq(Url::getStatus,BlogStatusEnum.ENABLE.getCode())).stream().collect(Collectors.groupingBy(Url::getRoleId));
+        map.forEach((a,b)->{
+            String url = String.join(",", b.stream().map(Url::getUrl).collect(Collectors.toList()));
+            redisUtil.del(String.format(role+"%s",a));
+            redisUtil.set(String.format(role+"%s",a),url);
+        });
     }
 
 }

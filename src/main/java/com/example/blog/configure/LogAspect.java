@@ -55,6 +55,7 @@ public class LogAspect {
         //添加需要过滤的接口
         List<String > noToken = Lists.newArrayList();
         noToken.add("login");
+        noToken.add("addUrlRoleToRedis");
         //过滤接口
         if(!ParamUtil.equals(joinPoint.getSignature().getName(),noToken)){
             //接口之前,权限校验

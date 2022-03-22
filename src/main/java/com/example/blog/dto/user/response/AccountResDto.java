@@ -21,6 +21,9 @@ public class AccountResDto {
     @ApiModelProperty(value = "账号")
     private String account;
 
+    @ApiModelProperty(value = "头像")
+    private String picUrl;
+
     @ApiModelProperty(value = "角色id")
     private String roleId;
 

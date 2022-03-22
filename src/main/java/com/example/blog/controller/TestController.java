@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 
 /**
  * @author Admin
@@ -26,7 +27,7 @@ public class TestController {
 
     @ApiOperation(value = "上传图片返回url")
     @PostMapping("/uploadImg")
-    public ResponseModelDto<String> uploadImg(@RequestParam("file")MultipartFile file){
+    public ResponseModelDto<String> uploadImg(@RequestParam("file") File file){
         return ResponseModels.ok(qCloudCosUtils.upload(file));
     }
 

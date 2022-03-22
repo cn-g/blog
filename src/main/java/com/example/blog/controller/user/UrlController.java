@@ -31,6 +31,7 @@ public class UrlController {
     @ApiOperation("添加接口路径接口")
     public ResponseModelDto addRole(@RequestBody AddUrlReqDto reqDto){
         if(urlService.addUrl(reqDto)){
+            urlService.addUrlRoleToRedis();
             return ResponseModels.ok();
         }else{
             throw new CommonException("添加接口路径失败");
@@ -41,6 +42,7 @@ public class UrlController {
     @ApiOperation("删除接口路径接口")
     public ResponseModelDto deleteRole(@RequestBody IdRequestDto reqDto){
         if(urlService.deleteUrl(reqDto)){
+            urlService.addUrlRoleToRedis();
             return ResponseModels.ok();
         }else{
             throw new CommonException("删除接口路径失败");
@@ -57,10 +59,18 @@ public class UrlController {
     @ApiOperation("修改接口路径信息")
     public ResponseModelDto updateUrl(@RequestBody UpdateUrlReqDto reqDto){
         if(urlService.updateUrl(reqDto)){
+            urlService.addUrlRoleToRedis();
             return ResponseModels.ok();
         }else{
             throw new CommonException("修改接口路径失败");
         }
+    }
+
+    @PostMapping("/addUrlRoleToRedis")
+    @ApiOperation("保存接口权限到redis")
+    public ResponseModelDto addUrlRoleToRedis(){
+        urlService.addUrlRoleToRedis();
+        return ResponseModels.ok();
     }
 
 }
