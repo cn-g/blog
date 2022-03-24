@@ -18,6 +18,9 @@ public class UpdateAccountReqDto extends IdRequestDto {
     @ApiModelProperty(value = "角色id")
     private String roleId;
 
+    @ApiModelProperty(value = "旧密码")
+    private String oldPassword;
+
     @ApiModelProperty(value = "密码")
     private String password;
 

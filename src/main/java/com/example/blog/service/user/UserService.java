@@ -94,6 +94,10 @@ public class UserService extends ServiceImpl<UserMapper, User>{
      */
     public Boolean updateUser(UpdateUserReqDto reqDto){
         User user = ToolsUtil.convertType(reqDto,User.class);
+        if(ParamUtil.empty(baseMapper.selectById(reqDto.getId()))){
+            AddUserReqDto addUserReqDto = ToolsUtil.convertType(reqDto,AddUserReqDto.class);
+            return addUser(addUserReqDto);
+        }
         user.setUpdateTime(LocalDateTime.now());
         return baseMapper.updateById(user) > 0;
     }

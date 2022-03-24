@@ -27,7 +27,7 @@ public class TestController {
 
     @ApiOperation(value = "上传图片返回url")
     @PostMapping("/uploadImg")
-    public ResponseModelDto<String> uploadImg(@RequestParam("file") File file){
+    public ResponseModelDto<String> uploadImg(@RequestParam("file") MultipartFile file){
         return ResponseModels.ok(qCloudCosUtils.upload(file));
     }
 

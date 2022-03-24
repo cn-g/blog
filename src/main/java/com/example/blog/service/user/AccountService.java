@@ -67,6 +67,14 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
      */
     public Boolean updateAccount(UpdateAccountReqDto reqDto){
         checkUser(reqDto.getAccount(),reqDto.getId());
+        if(ParamUtil.notEmpty(reqDto.getOldPassword())){
+            Account account = baseMapper.selectOne(Wrappers.lambdaQuery(Account.class)
+                    .eq(Account::getId,reqDto.getId())
+                    .eq(Account::getPassword,ToolsUtil.getPasswordToMD5(reqDto.getOldPassword())));
+            if(ParamUtil.empty(account)){
+                throw new CommonException("旧密码输入错误");
+            }
+        }
         Account account = ToolsUtil.convertType(reqDto,Account.class);
         account.setRoleName(roleService.getRole(reqDto.getRoleId()).getName());
         account.setUpdateTime(LocalDateTime.now());
