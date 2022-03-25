@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Admin
@@ -54,7 +56,6 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
         Account account = ToolsUtil.convertType(reqDto,Account.class);
         account.setId(ToolsUtil.getUUID());
         account.setCreateTime(LocalDateTime.now());
-        account.setRoleName(roleService.getRole(reqDto.getRoleId()).getName());
         account.setPassword(ToolsUtil.getPasswordToMD5(reqDto.getPassword()));
         account.setStatus(1);
         return baseMapper.insert(account) > 0;
@@ -76,7 +77,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
             }
         }
         Account account = ToolsUtil.convertType(reqDto,Account.class);
-        account.setRoleName(roleService.getRole(reqDto.getRoleId()).getName());
+        account.setPassword(ToolsUtil.getPasswordToMD5(reqDto.getPassword()));
         account.setUpdateTime(LocalDateTime.now());
         return baseMapper.updateById(account) > 0;
     }
@@ -123,8 +124,16 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
         if(ParamUtil.notEmpty(reqDto.getWeChat())){
             queryWrapper.like(Account::getWeChat,reqDto.getWeChat());
         }
+        Map<String,String> roleMap = roleService.getRoleData("").stream().collect(Collectors.toMap(IdAndNameDto::getId,IdAndNameDto::getName));
         Page<Account> accountPage = baseMapper.selectPage(reqDto.iPageInfo(),queryWrapper.ne(Account::getStatus,9));
-        return ToolsUtil.convertType(accountPage,QueryAccountResDto.class);
+        IPage<QueryAccountResDto> queryAccountResDtoIPage = ToolsUtil.convertType(accountPage,QueryAccountResDto.class);
+        int i = 0;
+        for (QueryAccountResDto record : queryAccountResDtoIPage.getRecords()) {
+            record.setRoleName(roleMap.get(record.getRoleId()));
+            queryAccountResDtoIPage.getRecords().set(i,record);
+            i++;
+        }
+        return queryAccountResDtoIPage;
     }
 
     /**

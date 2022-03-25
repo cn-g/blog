@@ -34,10 +34,6 @@ public class Account {
     @ApiModelProperty(value = "角色id")
     private String roleId;
 
-    @TableField(value = "role_name")
-    @ApiModelProperty(value = "角色名称")
-    private String roleName;
-
     @TableField(value = "password")
     @ApiModelProperty(value = "密码")
     private String password;
