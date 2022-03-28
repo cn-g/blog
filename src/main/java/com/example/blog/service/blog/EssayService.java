@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.blog.EssayMapper;
+import com.example.blog.dto.StatisticBlogDto;
 import com.example.blog.enums.BlogStatusEnum;
 import com.example.blog.enums.EssayLabelEnum;
 import com.example.blog.service.user.UserService;
@@ -150,6 +151,13 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
             number = number + essay.getViewNumber();
         }
         return number;
+    }
+
+    public StatisticBlogDto getNumber(){
+        StatisticBlogDto statisticBlogDto = new StatisticBlogDto();
+        statisticBlogDto.setEssayNumber(baseMapper.getEssayNumber());
+        statisticBlogDto.setViewNumber(baseMapper.getViewNumber());
+        return statisticBlogDto;
     }
 
 }

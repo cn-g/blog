@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Admin
  */
 @Data
 @ApiModel("查询用户信息出参类")
+@Accessors
 public class QueryUserResDto {
 
     @ApiModelProperty(value = "用户id")
@@ -55,9 +58,12 @@ public class QueryUserResDto {
     private LocalDate birthday;
 
     @ApiModelProperty(value = "分类id集，用逗号分隔")
-    private String categories;
+    private List<String> categories;
 
     @ApiModelProperty(value = "籍贯")
     private String nativePlace;
+
+    @ApiModelProperty(value = "类目名称")
+    private String categoryName;
 
 }

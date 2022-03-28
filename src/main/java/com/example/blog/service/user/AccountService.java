@@ -10,6 +10,7 @@ import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.*;
 import com.example.blog.entity.user.Account;
 import com.example.blog.enums.BlogStatusEnum;
+import com.example.blog.service.blog.EssayService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.base.LoginReqDto;
@@ -45,6 +46,9 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
 
     @Resource
     private RedisUtil redisUtil;
+
+    @Resource
+    private EssayService essayService;
 
     /**
      * 添加账号
@@ -102,6 +106,11 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
      */
     public AccountResDto getAccount(IdRequestDto reqDto){
         AccountResDto accountResDto = ToolsUtil.convertType(baseMapper.selectById(reqDto.getId()),AccountResDto.class);
+        accountResDto.setPicUrl(userService.getUser(reqDto).getPicUrl());
+        accountResDto.setRoleName(roleService.getRole(accountResDto.getRoleId()).getName());
+        accountResDto.setViewNumber(essayService.getNumber().getViewNumber());
+        accountResDto.setEssayNumber(essayService.getNumber().getEssayNumber());
+        accountResDto.setUserNumber(baseMapper.getUserNumber());
         return accountResDto;
     }
 
@@ -178,6 +187,8 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
             LoginResponseDto loginResponseDto = ToolsUtil.convertType(account,LoginResponseDto.class);
             loginResponseDto.setToken(loginResponseDto.getId());
             redisUtil.set(key+loginResponseDto.getId(),loginResponseDto.getToken(),10*60*6);
+            account.setLastTime(LocalDateTime.now());
+            baseMapper.updateById(account);
             return ResponseModels.ok(loginResponseDto);
         }
     }

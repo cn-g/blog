@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Admin
@@ -50,7 +51,7 @@ public class UpdateUserReqDto extends IdRequestDto {
     private LocalDate birthday;
 
     @ApiModelProperty(value = "分类id集，用逗号分隔")
-    private String categories;
+    private List<String> categories;
 
     @ApiModelProperty(value = "籍贯")
     private String nativePlace;

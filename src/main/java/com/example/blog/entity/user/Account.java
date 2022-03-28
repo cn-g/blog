@@ -62,4 +62,7 @@ public class Account {
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
 
+    @TableField(value = "last_time")
+    @ApiModelProperty(value = "上次登陆时间")
+    private LocalDateTime lastTime;
 }

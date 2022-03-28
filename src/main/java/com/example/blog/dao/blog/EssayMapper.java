@@ -9,4 +9,17 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface EssayMapper extends BaseMapper<Essay> {
+
+    /**
+     * 统计博客浏览数
+     * @return
+     */
+    Integer getViewNumber();
+
+    /**
+     * 获取发布的博客数
+     * @return
+     */
+    Integer getEssayNumber();
+
 }
