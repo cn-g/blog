@@ -12,6 +12,7 @@ import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.util.ToolsUtil;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,12 +45,21 @@ public class ThingService extends ServiceImpl<ThingMapper, Thing> {
      * @return
      */
     public List<QueryThingResDto> getThingList(){
-        return baseMapper.getThing();
+        List<Thing> thingList = baseMapper.selectList(Wrappers.lambdaQuery(Thing.class).orderByAsc(Thing::getStatus).orderByDesc(Thing::getCreateTime).last("limit 10"));
+        List<QueryThingResDto> queryThingResDtos = Lists.newArrayList();
+        thingList.forEach(t->{
+            queryThingResDtos.add(new QueryThingResDto().setThing(t.getThing()).setId(t.getId()).setStatus(!t.getStatus().equals(BlogStatusEnum.ENABLE.getCode())));
+        });
+        return queryThingResDtos;
     }
 
     public Boolean updateThing(IdRequestDto reqDto){
         Thing thing = baseMapper.selectById(reqDto.getId());
-        thing.setStatus(9);
+        if(thing.getStatus().equals(BlogStatusEnum.ENABLE.getCode())){
+            thing.setStatus(BlogStatusEnum.DELETE.getCode());
+        }else{
+            thing.setStatus(BlogStatusEnum.ENABLE.getCode());
+        }
         return baseMapper.updateById(thing) > 0;
     }
 

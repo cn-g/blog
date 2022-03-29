@@ -23,8 +23,12 @@ import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Admin
@@ -37,6 +41,9 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private CategoryService categoryService;
 
     /**
      * 添加博客
@@ -158,6 +165,23 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
         statisticBlogDto.setEssayNumber(baseMapper.getEssayNumber());
         statisticBlogDto.setViewNumber(baseMapper.getViewNumber());
         return statisticBlogDto;
+    }
+
+    public List<IdAndNameDto> getEssayRatio(){
+        List<Essay> essayList = baseMapper.selectList(Wrappers.lambdaQuery(Essay.class)
+                .eq(Essay::getLabel, EssayLabelEnum.PUBLISH.getCode())
+                .ne(Essay::getStatus, BlogStatusEnum.DELETE.getCode())
+                .last("limit 10"));
+        Map<String,List<Essay>> essayMap = essayList.stream().collect(Collectors.groupingBy(Essay::getCategoryId));
+        List<IdAndNameDto> idAndNameDtos = Lists.newArrayList();
+        int num = essayList.size();
+        essayMap.forEach((a,b)->{
+            IdAndNameDto idAndNameDto = new IdAndNameDto();
+            idAndNameDto.setId(categoryService.getById(a).getName());
+            idAndNameDto.setName(BigDecimal.valueOf(b.size()).divide(BigDecimal.valueOf(num),4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).toString().split("00")[0]);
+            idAndNameDtos.add(idAndNameDto);
+        });
+        return idAndNameDtos;
     }
 
 }

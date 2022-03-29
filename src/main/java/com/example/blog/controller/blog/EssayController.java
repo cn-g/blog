@@ -65,7 +65,7 @@ public class EssayController {
 
     @GetMapping("/getEssay")
     @ApiOperation("查询博客接口")
-    public ResponseModelDto<QueryEssayResDto> Essay(IdRequestDto reqDto){
+    public ResponseModelDto<QueryEssayResDto> getEssay(IdRequestDto reqDto){
         return ResponseModels.ok(essayService.getEssay(reqDto));
     }
 
@@ -73,6 +73,12 @@ public class EssayController {
     @ApiOperation("博客下拉接口")
     public ResponseModelDto<List<IdAndNameDto>> getEssayData(String name){
         return ResponseModels.ok(essayService.getEssayData(name));
+    }
+
+    @GetMapping("/getEssayRatio")
+    @ApiOperation("博客占比接口")
+    public ResponseModelDto<List<IdAndNameDto>> getEssayRatio(){
+        return ResponseModels.ok(essayService.getEssayRatio());
     }
 
 }

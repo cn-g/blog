@@ -4,7 +4,7 @@
 
 
     <select id="getThing" resultType="com.example.blog.dto.blog.response.QueryThingResDto">
-        select _id as id,thing as thing, status as thing
+        select _id as id,thing as thing, status as status
         from blog_thing
         order by create_time desc limit 6
     </select>
