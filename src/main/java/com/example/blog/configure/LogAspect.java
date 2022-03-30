@@ -55,7 +55,7 @@ public class LogAspect {
         //添加需要过滤的接口
         List<String > noToken = Lists.newArrayList();
         noToken.add("login");
-//        noToken.add("addUrlRoleToRedis");
+        noToken.add("addUrlRoleToRedis");
 //        noToken.add("getEssayRatio");
         //过滤接口
         if(!ParamUtil.equals(joinPoint.getSignature().getName(),noToken)){
@@ -72,8 +72,9 @@ public class LogAspect {
                 log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
                 throw new CommonException(ResponseCode.NoAuthor.getMessage(),ResponseCode.NoAuthor.getMessage_en(),ResponseCode.NoAuthor.getErrorCode());
             }
+
             String[] url = redisUtil.get(role).toString().split("\\,");
-            if(!Arrays.asList(url).contains(request.getRequestURL().toString())){
+            if(!Arrays.asList(url).contains(ToolsUtil.getUrl(request.getRequestURL().toString()))){
                 log.info("接口调用失败:返回结果=" + ResponseCode.NOPOWER);
                 log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
                 throw new CommonException(ResponseCode.NOPOWER.getMessage(),ResponseCode.NOPOWER.getMessage_en(),ResponseCode.NOPOWER.getErrorCode());
