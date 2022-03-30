@@ -35,8 +35,6 @@ public class LogAspect {
 
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
 
-    private static List<String > noToken;
-
     @Resource
     RedisUtil redisUtil;
 
