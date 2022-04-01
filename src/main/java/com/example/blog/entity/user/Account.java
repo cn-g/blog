@@ -65,4 +65,9 @@ public class Account {
     @TableField(value = "last_time")
     @ApiModelProperty(value = "上次登陆时间")
     private LocalDateTime lastTime;
+
+    @TableField("type")
+    @ApiModelProperty(value = "用户类型，1前台用户2后台用户")
+    private Integer type;
+
 }

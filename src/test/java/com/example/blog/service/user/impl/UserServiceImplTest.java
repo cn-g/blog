@@ -3,6 +3,7 @@ package com.example.blog.service.user.impl;
 import com.example.blog.BlogApplicationTests;
 import com.example.blog.dto.user.request.AddAccountReqDto;
 import com.example.blog.service.user.AccountService;
+import com.example.blog.service.user.UrlService;
 import com.example.blog.service.user.UserService;
 import org.junit.Test;
 
@@ -15,6 +16,9 @@ public class UserServiceImplTest extends BlogApplicationTests {
 
     @Resource
     private AccountService accountService;
+
+    @Resource
+    UrlService urlService;
 
     @Test
     public void addUser() {
@@ -41,5 +45,12 @@ public class UserServiceImplTest extends BlogApplicationTests {
 //        }
         }
     }
+
+    @Test
+    public void updateUrl(){
+        urlService.updateUrl();
+    }
+
+
 
 }

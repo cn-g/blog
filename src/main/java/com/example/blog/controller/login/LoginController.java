@@ -1,5 +1,6 @@
 package com.example.blog.controller.login;
 
+import com.example.blog.dto.user.request.LoginBlogReqDto;
 import com.example.blog.service.user.AccountService;
 import com.gcp.basicproject.base.LoginReqDto;
 import com.gcp.basicproject.base.LoginResponseDto;
@@ -7,7 +8,6 @@ import com.gcp.basicproject.response.ResponseModelDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +26,7 @@ public class LoginController {
 
     @GetMapping("/userLogin")
     @ApiOperation("用户登录接口")
-    public ResponseModelDto<LoginResponseDto> login(LoginReqDto reqDto){
+    public ResponseModelDto<LoginResponseDto> login(LoginBlogReqDto reqDto){
         return accountService.login(reqDto);
     }
 

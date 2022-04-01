@@ -38,11 +38,11 @@ public class LogAspect {
     @Resource
     RedisUtil redisUtil;
 
-    @Pointcut("execution(* com.example.blog.controller.*.*.*(..))")
+    @Pointcut("execution(* com.example.blog.controller.adminController.*.*.*(..))")
     @Synchronized
-    public void controllerMethod(){}
+    public void adminControllerMethod(){}
 
-    @Before("controllerMethod()")
+    @Before("adminControllerMethod()")
     public void logRequestInfo(JoinPoint joinPoint){
         RequestAttributes requestAttribute = RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes)requestAttribute).getRequest();
@@ -52,9 +52,7 @@ public class LogAspect {
                 ToolsUtil.getServerIp(),joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
         //添加需要过滤的接口
         List<String > noToken = Lists.newArrayList();
-        noToken.add("login");
         noToken.add("addUrlRoleToRedis");
-//        noToken.add("getEssayRatio");
         //过滤接口
         if(!ParamUtil.equals(joinPoint.getSignature().getName(),noToken)){
             //接口之前,权限校验
@@ -87,7 +85,7 @@ public class LogAspect {
      * @param o
      * @throws Exception
      */
-    @AfterReturning(returning = "o", pointcut = "controllerMethod()")
+    @AfterReturning(returning = "o", pointcut = "adminControllerMethod()")
     public void logResultInfo(Object o){
         log.info("接口调用成功:返回结果=" + JSON.toJSONString(o));
         log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
@@ -98,7 +96,7 @@ public class LogAspect {
      * @param joinPoint
      * @param e
      */
-    @AfterThrowing(pointcut = "controllerMethod()", throwing = "e")
+    @AfterThrowing(pointcut = "adminControllerMethod()", throwing = "e")
     public void doAfterThrowing(JoinPoint joinPoint, Exception e) {
         String methodName = joinPoint.getSignature().getName();
         List<Object> args = Arrays.asList(joinPoint.getArgs());

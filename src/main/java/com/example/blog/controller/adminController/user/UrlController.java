@@ -1,9 +1,10 @@
-package com.example.blog.controller.user;
+package com.example.blog.controller.adminController.user;
 
 import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.*;
 import com.example.blog.service.user.UrlService;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
@@ -20,7 +21,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @Api(value = "接口信息接口",tags = "接口信息接口")
-@RequestMapping("/url")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/url")
 @Slf4j
 public class UrlController {
 

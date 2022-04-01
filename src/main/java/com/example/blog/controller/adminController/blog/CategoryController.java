@@ -1,10 +1,11 @@
-package com.example.blog.controller.blog;
+package com.example.blog.controller.adminController.blog;
 
 import com.example.blog.dto.blog.request.*;
 import com.example.blog.dto.blog.response.QueryCategoryResDto;
 import com.example.blog.service.blog.CategoryService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @Api(value = "类目信息接口",tags = "类目信息接口")
-@RequestMapping("/category")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/category")
 public class CategoryController {
 
     @Resource

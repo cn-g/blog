@@ -11,6 +11,7 @@ import com.example.blog.dto.blog.request.QueryCategoryReqDto;
 import com.example.blog.dto.blog.request.UpdateCategoryReqDto;
 import com.example.blog.dto.blog.response.QueryCategoryResDto;
 import com.example.blog.entity.blog.Category;
+import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.util.ParamUtil;
@@ -87,6 +88,16 @@ public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
             queryWrapper.like(Category::getName,name);
         }
         List<Category> categoryList = baseMapper.selectList(queryWrapper.eq(Category::getStatus,1));
+        return ToolsUtil.convertType(categoryList,IdAndNameDto.class);
+    }
+
+    /**
+     * id和name集
+     * @return
+     */
+    public List<IdAndNameDto> getCategoryData(){
+        LambdaQueryWrapper<Category> queryWrapper = Wrappers.lambdaQuery(Category.class);
+        List<Category> categoryList = baseMapper.selectList(queryWrapper.eq(Category::getStatus, BlogStatusEnum.ENABLE.getCode()).last("limit 8"));
         return ToolsUtil.convertType(categoryList,IdAndNameDto.class);
     }
 

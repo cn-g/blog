@@ -31,4 +31,7 @@ public class AddAccountReqDto {
     @ApiModelProperty(value = "微信号")
     private String weChat;
 
+    @ApiModelProperty(value = "用户类型，1前台用户2后台用户")
+    private Integer type;
+
 }

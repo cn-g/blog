@@ -1,9 +1,10 @@
-package com.example.blog.controller.user;
+package com.example.blog.controller.adminController.user;
 
 import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.*;
 import com.example.blog.service.user.OperateService;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
@@ -18,7 +19,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @Api(value = "操作信息接口",tags = "操作信息接口")
-@RequestMapping("/operate")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/operate")
 public class OperateController {
 
     @Resource

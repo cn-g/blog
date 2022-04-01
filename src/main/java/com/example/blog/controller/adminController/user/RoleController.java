@@ -1,10 +1,11 @@
-package com.example.blog.controller.user;
+package com.example.blog.controller.adminController.user;
 
 import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.QueryRoleResDto;
 import com.example.blog.service.user.RoleService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @Api(value = "角色信息接口",tags = "角色信息接口")
-@RequestMapping("/role")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/role")
 public class RoleController {
 
     @Resource

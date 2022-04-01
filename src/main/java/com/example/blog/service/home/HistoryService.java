@@ -2,6 +2,7 @@ package com.example.blog.service.home;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.home.HistoryMapper;
@@ -9,14 +10,17 @@ import com.example.blog.dto.home.request.*;
 import com.example.blog.dto.home.response.*;
 import com.example.blog.entity.home.History;
 import com.example.blog.entity.home.Search;
+import com.example.blog.enums.BlogStatusEnum;
 import com.example.blog.service.user.AccountService;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Admin
@@ -92,6 +96,15 @@ public class HistoryService extends ServiceImpl<HistoryMapper, History> {
     public QueryHistoryResDto getHistory(IdRequestDto reqDto){
         History history = baseMapper.selectById(reqDto.getId());
         return ToolsUtil.convertType(history,QueryHistoryResDto.class);
+    }
+
+    /**
+     * 首页历史搜索关键字接口
+     * @return
+     */
+    public List<QueryHistoryResDto> getHistoryList(){
+        List<History> historyList = baseMapper.selectList(Wrappers.lambdaQuery(History.class).eq(History::getStatus, BlogStatusEnum.ENABLE.getCode()).orderByDesc(History::getCreateTime).last("limit 10"));
+        return ToolsUtil.convertType(historyList,QueryHistoryResDto.class);
     }
 
 }

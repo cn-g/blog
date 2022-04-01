@@ -1,9 +1,10 @@
-package com.example.blog.controller.blog;
+package com.example.blog.controller.adminController.blog;
 
 import com.example.blog.dto.blog.request.AddThingReqDto;
 import com.example.blog.dto.blog.response.QueryThingResDto;
 import com.example.blog.service.blog.ThingService;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
 import io.swagger.annotations.Api;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 @RestController
 @Api(value = "待办事项接口",tags = "待办事项接口")
-@RequestMapping("/thing")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/thing")
 public class ThingController {
 
     @Resource

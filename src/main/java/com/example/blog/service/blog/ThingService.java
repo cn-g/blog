@@ -11,6 +11,7 @@ import com.example.blog.entity.blog.Thing;
 import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.CommonException;
+import com.gcp.basicproject.util.RequestUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class ThingService extends ServiceImpl<ThingMapper, Thing> {
         thing.setId(ToolsUtil.getUUID());
         thing.setStatus(1);
         thing.setCreateTime(LocalDateTime.now());
+        thing.setUserId(RequestUtil.getUserId());
         return baseMapper.insert(thing) > 0;
     }
 
@@ -45,7 +47,7 @@ public class ThingService extends ServiceImpl<ThingMapper, Thing> {
      * @return
      */
     public List<QueryThingResDto> getThingList(){
-        List<Thing> thingList = baseMapper.selectList(Wrappers.lambdaQuery(Thing.class).orderByAsc(Thing::getStatus).orderByDesc(Thing::getCreateTime).last("limit 10"));
+        List<Thing> thingList = baseMapper.selectList(Wrappers.lambdaQuery(Thing.class).orderByAsc(Thing::getStatus).orderByDesc(Thing::getCreateTime).eq(Thing::getUserId, RequestUtil.getUserId()).last("limit 10"));
         List<QueryThingResDto> queryThingResDtos = Lists.newArrayList();
         thingList.forEach(t->{
             queryThingResDtos.add(new QueryThingResDto().setThing(t.getThing()).setId(t.getId()).setStatus(!t.getStatus().equals(BlogStatusEnum.ENABLE.getCode())));

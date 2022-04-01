@@ -1,5 +1,6 @@
-package com.example.blog.controller.blog;
+package com.example.blog.controller.adminController.blog;
 
+import com.gcp.basicproject.base.WebBaseUrl;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Api(value = "评论信息接口",tags = "评论信息接口")
-@RequestMapping("/comment")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/comment")
 public class CommentController {
 
 

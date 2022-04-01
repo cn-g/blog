@@ -12,6 +12,7 @@ import com.example.blog.entity.user.Account;
 import com.example.blog.entity.user.Url;
 import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.RedisUtil;
@@ -122,6 +123,17 @@ public class UrlService extends ServiceImpl<UrlMapper, Url> {
             String url = String.join(",", b.stream().map(Url::getUrl).collect(Collectors.toList()));
             redisUtil.del(String.format(role+"%s",a));
             redisUtil.set(String.format(role+"%s",a),url);
+        });
+    }
+
+    /**
+     * 批量修改请求路径
+     */
+    public void updateUrl(){
+        List<Url> urlList = baseMapper.selectList(null);
+        urlList.forEach(u->{
+            u.setUrl("/"+WebBaseUrl.ADMIN_URL+u.getUrl());
+            baseMapper.updateById(u);
         });
     }
 

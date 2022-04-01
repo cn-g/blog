@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.blog.EssayMapper;
 import com.example.blog.dto.StatisticBlogDto;
+import com.example.blog.dto.user.response.QueryUserResDto;
 import com.example.blog.enums.BlogStatusEnum;
 import com.example.blog.enums.EssayLabelEnum;
 import com.example.blog.service.user.UserService;
@@ -17,7 +18,9 @@ import com.example.blog.entity.blog.Essay;
 import com.example.blog.entity.user.Account;
 import com.example.blog.service.user.AccountService;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.PageIdReqDto;
 import com.gcp.basicproject.util.ParamUtil;
+import com.gcp.basicproject.util.RequestUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
@@ -106,8 +109,15 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
             queryWrapper.eq(Essay::getCategoryId,reqDto.getCategoryId());
         }
         Page<Essay> essayPage = baseMapper.selectPage(reqDto.iPageInfo(),queryWrapper.ne(Essay::getStatus,9));
-        essayPage.getRecords();
-        return ToolsUtil.convertType(essayPage,QueryEssayResDto.class);
+        IPage<QueryEssayResDto> queryEssayResDtoIPage = ToolsUtil.convertType(essayPage,QueryEssayResDto.class);
+        int i = 0;
+        for (QueryEssayResDto record : queryEssayResDtoIPage.getRecords()) {
+            record.setName(accountService.getAccount(new IdRequestDto().setId(record.getUserId())).getAccount());
+            record.setUserPicUrl(userService.getUser(new IdRequestDto().setId(record.getUserId())).getPicUrl());
+            queryEssayResDtoIPage.getRecords().set(i,record);
+            i++;
+        }
+        return queryEssayResDtoIPage;
     }
 
     /**
@@ -182,6 +192,33 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
             idAndNameDtos.add(idAndNameDto);
         });
         return idAndNameDtos;
+    }
+
+    /**
+     * 前台分页获取博客信息
+     * @param reqDto
+     * @return
+     */
+    public IPage<QueryEssayResDto> getEssayPage(PageIdReqDto reqDto){
+        LambdaQueryWrapper<Essay> queryWrapper = new LambdaQueryWrapper<>();
+        if(ParamUtil.notEmpty(reqDto.getId())){
+            queryWrapper.eq(Essay::getCategoryId,reqDto.getId());
+        }else{
+            if(ParamUtil.notEmpty(RequestUtil.getUserId())){
+                QueryUserResDto queryUserResDto = userService.getUser(new IdRequestDto().setId(RequestUtil.getUserId()));
+                queryWrapper.in(Essay::getCategoryId,queryUserResDto.getCategories());
+            }
+        }
+        Page<Essay> essayPage = baseMapper.selectPage(reqDto.iPageInfo(),queryWrapper.eq(Essay::getStatus,BlogStatusEnum.ENABLE.getCode()).eq(Essay::getLabel,EssayLabelEnum.PUBLISH.getCode()));
+        IPage<QueryEssayResDto> queryEssayResDtoIPage = ToolsUtil.convertType(essayPage,QueryEssayResDto.class);
+        int i = 0;
+        for (QueryEssayResDto record : queryEssayResDtoIPage.getRecords()) {
+            record.setName(accountService.getAccount(new IdRequestDto().setId(record.getUserId())).getAccount());
+            record.setUserPicUrl(userService.getUser(new IdRequestDto().setId(record.getUserId())).getPicUrl());
+            queryEssayResDtoIPage.getRecords().set(i,record);
+            i++;
+        }
+        return queryEssayResDtoIPage;
     }
 
 }

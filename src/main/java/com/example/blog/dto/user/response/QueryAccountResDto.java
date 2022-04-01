@@ -42,4 +42,7 @@ public class QueryAccountResDto {
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
+    @ApiModelProperty("用户类型，1前台用户2后台用户")
+    private Integer type;
+
 }

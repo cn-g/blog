@@ -1,9 +1,10 @@
-package com.example.blog.controller.home;
+package com.example.blog.controller.adminController.home;
 
 import com.example.blog.dto.home.request.*;
 import com.example.blog.dto.home.response.*;
 import com.example.blog.service.home.UserRecommendService;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
@@ -18,7 +19,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @Api(value = "热门博主信息接口",tags = "热门博主信息接口")
-@RequestMapping("/userRecommend")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/userRecommend")
 public class UserRecommendController {
 
     @Resource

@@ -2,6 +2,7 @@ package com.example.blog.service.home;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.home.SearchMapper;
@@ -9,12 +10,14 @@ import com.example.blog.dto.home.request.*;
 import com.example.blog.dto.home.response.*;
 import com.example.blog.entity.home.Channel;
 import com.example.blog.entity.home.Search;
+import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Admin
@@ -82,6 +85,15 @@ public class SearchService extends ServiceImpl<SearchMapper, Search> {
     public QuerySearchResDto getSearch(IdRequestDto reqDto){
         Search search = baseMapper.selectById(reqDto.getId());
         return ToolsUtil.convertType(search,QuerySearchResDto.class);
+    }
+
+    /**
+     * 获取热搜关键字
+     * @return
+     */
+    public List<QuerySearchResDto> getSearchList(){
+        List<Search> searchList = baseMapper.selectList(Wrappers.lambdaQuery(Search.class).eq(Search::getStatus, BlogStatusEnum.ENABLE.getCode()).orderByAsc(Search::getSort).last("limit 10"));
+        return ToolsUtil.convertType(searchList,QuerySearchResDto.class);
     }
 
 }

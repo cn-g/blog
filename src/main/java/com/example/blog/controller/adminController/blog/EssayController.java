@@ -1,11 +1,11 @@
-package com.example.blog.controller.blog;
+package com.example.blog.controller.adminController.blog;
 
 import com.example.blog.dto.blog.request.*;
 import com.example.blog.dto.blog.response.QueryEssayResDto;
-import com.example.blog.entity.blog.Essay;
 import com.example.blog.service.blog.EssayService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @Api(value = "博客信息接口",tags = "博客信息接口")
-@RequestMapping("/essay")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/essay")
 public class EssayController {
 
     @Resource

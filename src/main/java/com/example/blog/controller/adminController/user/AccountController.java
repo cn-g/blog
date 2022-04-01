@@ -1,4 +1,4 @@
-package com.example.blog.controller.user;
+package com.example.blog.controller.adminController.user;
 
 import com.example.blog.dto.user.request.AddAccountReqDto;
 import com.example.blog.dto.user.request.QueryAccountReqDto;
@@ -8,6 +8,7 @@ import com.example.blog.dto.user.response.QueryAccountResDto;
 import com.example.blog.service.user.AccountService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @Api(value = "账号信息接口",tags = "账号信息接口")
-@RequestMapping("/account")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/account")
 public class AccountController {
 
     @Resource

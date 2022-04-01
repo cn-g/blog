@@ -1,4 +1,4 @@
-package com.example.blog.controller.user;
+package com.example.blog.controller.adminController.user;
 
 import com.example.blog.dto.home.request.UpdateUserRecommendReqDto;
 import com.example.blog.dto.user.request.QueryUserReqDto;
@@ -6,8 +6,8 @@ import com.example.blog.dto.user.response.QueryUserResDto;
 import com.example.blog.dto.user.request.AddUserReqDto;
 import com.example.blog.dto.user.request.UpdateUserReqDto;
 import com.example.blog.service.user.UserService;
-import com.gcp.basicproject.base.AbstractPageableSearchDto;
 import com.gcp.basicproject.base.IdRequestDto;
+import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.response.PageableResponseModelDto;
 import com.gcp.basicproject.response.ResponseModelDto;
@@ -24,7 +24,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @Api(value = "用户信息接口",tags = "用户信息接口")
-@RequestMapping("/user")
+@RequestMapping(WebBaseUrl.ADMIN_URL+"/user")
 @Slf4j
 public class UserController {
 

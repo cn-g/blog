@@ -37,4 +37,8 @@ public class Thing {
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
+    @TableField(value = "user_id")
+    @ApiModelProperty("用户id")
+    private String userId;
+
 }

@@ -62,6 +62,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
         account.setCreateTime(LocalDateTime.now());
         account.setPassword(ToolsUtil.getPasswordToMD5(reqDto.getPassword()));
         account.setStatus(1);
+        account.setType(reqDto.getType());
         return baseMapper.insert(account) > 0;
     }
 
@@ -176,11 +177,12 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
      * @param reqDto
      * @return
      */
-    public ResponseModelDto<LoginResponseDto> login(LoginReqDto reqDto){
+    public ResponseModelDto<LoginResponseDto> login(LoginBlogReqDto reqDto){
         Account account = baseMapper.selectOne(Wrappers.lambdaQuery(Account.class)
                 .eq(Account::getAccount,reqDto.getAccount())
                 .eq(Account::getPassword,ToolsUtil.getPasswordToMD5(reqDto.getPassword()))
-                .eq(Account::getStatus, BlogStatusEnum.ENABLE.getCode()));
+                .eq(Account::getStatus, BlogStatusEnum.ENABLE.getCode())
+                .eq(Account::getType,reqDto.getType()));
         if(ParamUtil.empty(account)){
             return ResponseModels.loginException();
         }else{
