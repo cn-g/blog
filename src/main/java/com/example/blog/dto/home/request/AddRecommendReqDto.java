@@ -41,7 +41,7 @@ public class AddRecommendReqDto {
     private LocalDateTime blogTime;
 
     @ApiModelProperty(value = "排序")
-    private Integer sort;
+    private Integer sort=0;
 
     @ApiModelProperty(value = "状态，0隐藏、1显示、9删除")
     private Integer status;

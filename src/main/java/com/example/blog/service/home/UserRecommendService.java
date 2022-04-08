@@ -2,6 +2,7 @@ package com.example.blog.service.home;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.home.UserRecommendMapper;
@@ -10,12 +11,15 @@ import com.example.blog.dto.home.request.*;
 import com.example.blog.dto.home.response.*;
 import com.example.blog.entity.home.Recommend;
 import com.example.blog.entity.home.UserRecommend;
+import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Admin
@@ -83,6 +87,18 @@ public class UserRecommendService extends ServiceImpl<UserRecommendMapper, UserR
     public QueryUserRecommendResDto getUserRecommend(IdRequestDto reqDto){
         UserRecommend userRecommend = baseMapper.selectById(reqDto.getId());
         return ToolsUtil.convertType(userRecommend,QueryUserRecommendResDto.class);
+    }
+
+    /**
+     * 获取热门博主榜单
+     * @return
+     */
+    public List<QueryUserRecommendResDto> getUserRecommendList(){
+        List<UserRecommend> userRecommendList = baseMapper.selectList(Wrappers.lambdaQuery(UserRecommend.class).eq(UserRecommend::getDay, LocalDate.now())
+                .eq(UserRecommend::getStatus, BlogStatusEnum.ENABLE.getCode())
+                .orderByDesc(UserRecommend::getPageViews)
+                .last("limit 10"));
+        return ToolsUtil.convertType(userRecommendList,QueryUserRecommendResDto.class);
     }
 
 }

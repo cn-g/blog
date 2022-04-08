@@ -1,16 +1,17 @@
 package com.example.blog.controller.receptionController.home;
 
+import com.example.blog.dto.blog.request.KeyWordPageReqDto;
+import com.example.blog.dto.blog.response.QueryCommentResDto;
 import com.example.blog.dto.blog.response.QueryEssayResDto;
-import com.example.blog.dto.home.response.QueryChannelResDto;
-import com.example.blog.dto.home.response.QueryHistoryResDto;
-import com.example.blog.dto.home.response.QuerySearchResDto;
+import com.example.blog.dto.blog.response.ReEssayResDto;
+import com.example.blog.dto.home.response.*;
 import com.example.blog.entity.home.Channel;
 import com.example.blog.service.blog.CategoryService;
+import com.example.blog.service.blog.CommentService;
 import com.example.blog.service.blog.EssayService;
-import com.example.blog.service.home.ChannelService;
-import com.example.blog.service.home.HistoryService;
-import com.example.blog.service.home.SearchService;
+import com.example.blog.service.home.*;
 import com.gcp.basicproject.base.IdAndNameDto;
+import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.base.PageIdReqDto;
 import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.response.PageableResponseModelDto;
@@ -42,6 +43,15 @@ public class ReceptionHomeController {
     @Resource
     private EssayService essayService;
 
+    @Resource
+    private RecommendService recommendService;
+
+    @Resource
+    private UserRecommendService userRecommendService;
+
+    @Resource
+    private CommentService commentService;
+
     @GetMapping("/getChannelList")
     @ApiOperation("首页轮播图列表接口")
     public ResponseModelDto<List<QueryChannelResDto>> getChannelList(){
@@ -66,8 +76,37 @@ public class ReceptionHomeController {
         return ResponseModels.page2ResponseModel(essayService.getEssayPage(idReqDto));
     }
 
+    @GetMapping("/getRecommendList")
+    @ApiOperation("前台热门博客榜单接口")
+    public ResponseModelDto<List<QueryRecommendResDto>> getRecommendList(){
+        return ResponseModels.ok(recommendService.getRecommendList());
+    }
 
+    @GetMapping("/getUserRecommendList")
+    @ApiOperation("前台热门博主榜单接口")
+    public ResponseModelDto<List<QueryUserRecommendResDto>> getUserRecommendList(){
+        return ResponseModels.ok(userRecommendService.getUserRecommendList());
+    }
 
+    @GetMapping("/searchEssay")
+    @ApiOperation("顶部搜索接口")
+    public PageableResponseModelDto<ReEssayResDto> getEssayPageByKeyWord(KeyWordPageReqDto reqDto){
+        return ResponseModels.page2ResponseModel(essayService.getEssayList(reqDto));
+    }
 
+    @GetMapping("/getEssayDec")
+    @ApiOperation("博客详情")
+    public ResponseModelDto<QueryEssayResDto> getEssayDec(IdRequestDto reqDto){
+        return ResponseModels.ok(essayService.getEssay(reqDto));
+    }
 
+    @GetMapping("/getCommentPage")
+    @ApiOperation("查询博客评论")
+    public PageableResponseModelDto<QueryCommentResDto> getCommentPage(PageIdReqDto reqDto){
+        return ResponseModels.page2ResponseModel(commentService.getCommentPage(reqDto));
+    }
+
+    public ResponseModelDto addFootprint(){
+
+    }
 }

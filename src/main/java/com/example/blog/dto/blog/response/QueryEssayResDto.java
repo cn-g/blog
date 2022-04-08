@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -26,6 +27,18 @@ public class QueryEssayResDto {
 
     @ApiModelProperty(value = "用户头像")
     private String userPicUrl;
+
+    @ApiModelProperty(value = "性别：1男2女3未知")
+    private Integer sex;
+
+    @ApiModelProperty(value = "用户简介")
+    private String userSynopsis;
+
+    @ApiModelProperty(value = "出生日期")
+    private LocalDate birthday;
+
+    @ApiModelProperty(value = "所在地区")
+    private String areaName;
 
     @ApiModelProperty(value = "类目id")
     private String categoryId;

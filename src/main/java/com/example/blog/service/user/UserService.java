@@ -28,6 +28,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Admin
@@ -135,8 +138,8 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         if(ParamUtil.empty(user)){
             return true;
         }
-//        user.setStatus(9);
-//        user.setUpdateTime(LocalDateTime.now());
+        user.setStatus(BlogStatusEnum.DELETE.getCode());
+        user.setUpdateTime(LocalDateTime.now());
         return baseMapper.deleteById(user) > 0;
     }
 
@@ -154,6 +157,11 @@ public class UserService extends ServiceImpl<UserMapper, User>{
                 .setBlogUserPic(ParamUtil.notEmpty(user.getPicUrl())?user.getPicUrl():null)
                 .setBlogUserDesc(ParamUtil.notEmpty(user.getSynopsis())?user.getSynopsis():null)
                 .setPageViews(ParamUtil.notEmpty(number)?number:0);
+    }
+
+    public Map<String,User> getUserMap(){
+        List<User> userList = baseMapper.selectList(Wrappers.lambdaQuery(User.class).eq(User::getStatus,BlogStatusEnum.ENABLE.getCode()));
+        return userList.stream().collect(Collectors.toMap(User::getId, Function.identity()));
     }
 
 }

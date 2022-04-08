@@ -22,27 +22,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @EnableSwagger2WebMvc
 public class Knife4jConfiguration {
 
-//    @Bean
-//    public Docket defaultApi2() {
-//        Docket docket=new Docket(DocumentationType.SWAGGER_2)
-//                .apiInfo(new ApiInfoBuilder()
-//                        //.title("swagger-bootstrap-ui-demo RESTful APIs")
-//                        .description("gcp test swagger APIS")
-//                        //.termsOfServiceUrl("http://www.xx.com/")
-//                        .contact(new Contact("郭长平","","2046039989@qq.com"))
-//                        .license("2046039989@qq.com")
-//                        .version("1.0")
-//                        .build())
-//                //分组名称
-//                .groupName("后台相关API")
-//                .select()
-//                //这里指定Controller扫描包路径
-//                .apis(RequestHandlerSelectors.basePackage("com.example.blog"))
-//                .paths(PathSelectors.any())
-//                .build();
-//        return docket;
-//    }
-
     /**
      * 相关Api
      *
@@ -50,7 +29,7 @@ public class Knife4jConfiguration {
      */
     @Bean
     public Docket createApi() {
-        return new Docket(DocumentationType.SWAGGER_2).groupName("博客后台相关Api").apiInfo(apiInfo()).select()
+        return new Docket(DocumentationType.SWAGGER_2).groupName("博客前台相关Api").apiInfo(apiInfo()).select()
                 .apis(RequestHandlerSelectors.basePackage("com.example.blog.controller.receptionController")).paths(PathSelectors.any()).build()
                 .securitySchemes(Lists.<SecurityScheme>newArrayList(tokenKey(), accessType()));
     }
@@ -61,7 +40,7 @@ public class Knife4jConfiguration {
      */
     @Bean
     public Docket createMobileApi() {
-        return new Docket(DocumentationType.SWAGGER_2).groupName("博客前台相关Api").apiInfo(apiInfo()).select()
+        return new Docket(DocumentationType.SWAGGER_2).groupName("博客后台相关Api").apiInfo(apiInfo()).select()
                 .apis(RequestHandlerSelectors.basePackage("com.example.blog.controller.adminController")).paths(PathSelectors.any()).build()
                 .securitySchemes(Lists.<SecurityScheme>newArrayList(tokenKey(), accessType()));
     }

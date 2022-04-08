@@ -29,8 +29,6 @@ public class OperateHistory {
     @ApiModelProperty(value = "用户id")
     private String userId;
 
-
-
     @TableField(value = "blog_id")
     @ApiModelProperty(value = "博客id")
     private String blogId;

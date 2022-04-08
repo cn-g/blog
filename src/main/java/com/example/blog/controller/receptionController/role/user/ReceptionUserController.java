@@ -1,4 +1,4 @@
-package com.example.blog.controller.receptionController.user;
+package com.example.blog.controller.receptionController.role.user;
 
 import com.example.blog.dto.home.response.QueryHistoryResDto;
 import com.example.blog.dto.user.response.AccountResDto;
@@ -38,7 +38,7 @@ public class ReceptionUserController {
     }
 
     @GetMapping("/getHistoryList")
-    @ApiOperation("顶部热门搜索列表接口")
+    @ApiOperation("顶部历史搜索列表接口")
     public ResponseModelDto<List<QueryHistoryResDto>> getHistoryList(){
         return ResponseModels.ok(historyService.getHistoryList());
     }

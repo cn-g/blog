@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.blog.EssayMapper;
 import com.example.blog.dto.StatisticBlogDto;
+import com.example.blog.dto.blog.response.ReEssayResDto;
 import com.example.blog.dto.user.response.QueryUserResDto;
 import com.example.blog.enums.BlogStatusEnum;
 import com.example.blog.enums.EssayLabelEnum;
@@ -129,7 +130,12 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
         Essay essay = baseMapper.selectById(reqDto.getId());
         QueryEssayResDto queryEssayResDto = ToolsUtil.convertType(essay,QueryEssayResDto.class);
         queryEssayResDto.setName(accountService.getAccount(new IdRequestDto().setId(queryEssayResDto.getUserId())).getAccount());
-        queryEssayResDto.setUserPicUrl(userService.getUser(new IdRequestDto().setId(queryEssayResDto.getUserId())).getPicUrl());
+        QueryUserResDto queryUserResDto = userService.getUser(new IdRequestDto().setId(queryEssayResDto.getUserId()));
+        queryEssayResDto.setSex(queryUserResDto.getSex());
+        queryEssayResDto.setBirthday(queryUserResDto.getBirthday());
+        queryEssayResDto.setAreaName(queryUserResDto.getAreaName());
+        queryEssayResDto.setUserSynopsis(queryUserResDto.getSynopsis());
+        queryEssayResDto.setUserPicUrl(queryUserResDto.getPicUrl());
         return queryEssayResDto;
     }
 
@@ -206,7 +212,11 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
         }else{
             if(ParamUtil.notEmpty(RequestUtil.getUserId())){
                 QueryUserResDto queryUserResDto = userService.getUser(new IdRequestDto().setId(RequestUtil.getUserId()));
-                queryWrapper.in(Essay::getCategoryId,queryUserResDto.getCategories());
+                if(ParamUtil.notEmpty(queryUserResDto.getCategories())){
+                    queryWrapper.in(Essay::getCategoryId,queryUserResDto.getCategories());
+                }else{
+                    queryWrapper.orderByDesc(Essay::getViewNumber);
+                }
             }
         }
         Page<Essay> essayPage = baseMapper.selectPage(reqDto.iPageInfo(),queryWrapper.eq(Essay::getStatus,BlogStatusEnum.ENABLE.getCode()).eq(Essay::getLabel,EssayLabelEnum.PUBLISH.getCode()));
@@ -219,6 +229,10 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
             i++;
         }
         return queryEssayResDtoIPage;
+    }
+
+    public IPage<ReEssayResDto> getEssayList(KeyWordPageReqDto reqDto){
+        return baseMapper.getEssayByKeyWord(reqDto,reqDto.iPageInfo());
     }
 
 }

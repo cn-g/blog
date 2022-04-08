@@ -14,4 +14,29 @@
         where label = 1 and status = 1;
     </select>
 
+    <select id="getEssayByKeyWord" resultType="com.example.blog.dto.blog.response.ReEssayResDto">
+        select e._id as id,
+               e.user_id as userId,
+               a.account as name,
+               u.pic_url as userPicUrl,
+               e.pic_url as picUrl,
+               e.title as title,
+               e.synopsis as synopsis,
+               e.publish_time as publishTime,
+               e.good_number as goodNumber,
+               e.collect_number as collectNumber,
+               e.view_number as viewNumber
+        from blog_essay e inner join blog_user u inner join blog_account a on e.user_id = u._id and u._id = a._id
+        where e.label = 1
+        <if test="dto.keyWord != null">
+            and
+            (e.title like CONCAT('%',#{dto.keyWord},'%')
+            or e.content like CONCAT('%',#{dto.keyWord},'%')
+            or e.synopsis like CONCAT('%',#{dto.keyWord},'%')
+            or a.account like CONCAT('%',#{dto.keyWord},'%'))
+        </if>
+        and e.status = 1 and a.status = 1
+        order by e.view_number desc
+    </select>
+
 </mapper>

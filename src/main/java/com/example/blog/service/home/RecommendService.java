@@ -2,18 +2,22 @@ package com.example.blog.service.home;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.home.RecommendMapper;
 import com.example.blog.dto.home.request.*;
 import com.example.blog.dto.home.response.*;
 import com.example.blog.entity.home.Recommend;
+import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Admin
@@ -81,6 +85,18 @@ public class RecommendService extends ServiceImpl<RecommendMapper, Recommend> {
     public QueryRecommendResDto getRecommend(IdRequestDto reqDto){
         Recommend recommend = baseMapper.selectById(reqDto.getId());
         return ToolsUtil.convertType(recommend,QueryRecommendResDto.class);
+    }
+
+    /**
+     * 获取热门博客榜单列表
+     * @return
+     */
+    public List<QueryRecommendResDto> getRecommendList(){
+        List<Recommend> recommendList = baseMapper.selectList(Wrappers.lambdaQuery(Recommend.class).eq(Recommend::getDay, LocalDate.now())
+                .eq(Recommend::getStatus, BlogStatusEnum.ENABLE.getCode())
+                .orderByAsc(Recommend::getSort)
+                .last("limit 10"));
+        return ToolsUtil.convertType(recommendList,QueryRecommendResDto.class);
     }
 
 }

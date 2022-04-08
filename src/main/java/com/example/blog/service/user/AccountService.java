@@ -10,6 +10,7 @@ import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.*;
 import com.example.blog.entity.user.Account;
 import com.example.blog.enums.BlogStatusEnum;
+import com.example.blog.enums.UserTypeEnum;
 import com.example.blog.service.blog.EssayService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
@@ -22,12 +23,16 @@ import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.RedisUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import com.google.common.collect.Lists;
+import io.seata.spring.annotation.GlobalTransactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -50,20 +55,40 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
     @Resource
     private EssayService essayService;
 
+    @Value("common.user.role")
+    private String roleId;
+
+    @Value("common.user.picurl")
+    private String picUrl;
+
     /**
      * 添加账号
      * @param reqDto
      * @return
      */
+    @GlobalTransactional
     public Boolean addAccount(AddAccountReqDto reqDto){
         checkUser(reqDto.getAccount(),"");
+        String id = ToolsUtil.getUUID();
         Account account = ToolsUtil.convertType(reqDto,Account.class);
-        account.setId(ToolsUtil.getUUID());
+        account.setId(id);
         account.setCreateTime(LocalDateTime.now());
         account.setPassword(ToolsUtil.getPasswordToMD5(reqDto.getPassword()));
         account.setStatus(1);
         account.setType(reqDto.getType());
-        return baseMapper.insert(account) > 0;
+        //前台注册用户都为普通用户角色
+        if(reqDto.getType().equals(UserTypeEnum.RECEPTION.getCode())){
+            account.setRoleId(roleId);
+        }
+        AddUserReqDto reqDto1 = new AddUserReqDto();
+        reqDto1.setId(id);
+        reqDto1.setPicUrl(picUrl);
+        reqDto1.setStatus(BlogStatusEnum.ENABLE.getCode());
+        reqDto1.setSynopsis("还没有填写简介哦~");
+        reqDto1.setAreaName("未知地点");
+        reqDto1.setSex(3);
+        reqDto1.setBirthday(LocalDate.now());
+        return userService.addUser(reqDto1) && baseMapper.insert(account) > 0;
     }
 
     /**
@@ -94,7 +119,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
      */
     public Boolean deleteAccount(IdRequestDto reqDto){
         Account account = baseMapper.selectById(reqDto.getId());
-        account.setStatus(9);
+        account.setStatus(BlogStatusEnum.DELETE.getCode());
         account.setUpdateTime(LocalDateTime.now());
         userService.deleteUser(reqDto);
         return baseMapper.updateById(account) > 0;
@@ -135,7 +160,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
             queryWrapper.like(Account::getWeChat,reqDto.getWeChat());
         }
         Map<String,String> roleMap = roleService.getRoleData("").stream().collect(Collectors.toMap(IdAndNameDto::getId,IdAndNameDto::getName));
-        Page<Account> accountPage = baseMapper.selectPage(reqDto.iPageInfo(),queryWrapper.ne(Account::getStatus,9));
+        Page<Account> accountPage = baseMapper.selectPage(reqDto.iPageInfo(),queryWrapper.ne(Account::getStatus,BlogStatusEnum.DELETE.getCode()));
         IPage<QueryAccountResDto> queryAccountResDtoIPage = ToolsUtil.convertType(accountPage,QueryAccountResDto.class);
         int i = 0;
         for (QueryAccountResDto record : queryAccountResDtoIPage.getRecords()) {
@@ -164,7 +189,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
      * @return
      */
     public List<IdAndNameDto> getAccountData(String name){
-        List<Account> accountList = baseMapper.selectList(Wrappers.lambdaQuery(Account.class).eq(Account::getStatus,1).like(Account::getAccount,name));
+        List<Account> accountList = baseMapper.selectList(Wrappers.lambdaQuery(Account.class).eq(Account::getStatus,BlogStatusEnum.ENABLE.getCode()).like(Account::getAccount,name));
         List<IdAndNameDto> list = Lists.newArrayList();
         accountList.forEach(a->{
             list.add(new IdAndNameDto().setId(a.getId()).setName(a.getAccount()));
@@ -193,6 +218,11 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
             baseMapper.updateById(account);
             return ResponseModels.ok(loginResponseDto);
         }
+    }
+
+    public Map<String,Account> getAccountMap(){
+        List<Account> accountList = baseMapper.selectList(Wrappers.lambdaQuery(Account.class).eq(Account::getStatus,BlogStatusEnum.ENABLE.getCode()));
+        return accountList.stream().collect(Collectors.toMap(Account::getId, Function.identity()));
     }
 
 }

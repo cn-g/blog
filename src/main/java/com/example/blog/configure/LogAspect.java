@@ -42,7 +42,11 @@ public class LogAspect {
     @Synchronized
     public void adminControllerMethod(){}
 
-    @Before("adminControllerMethod()")
+    @Pointcut("execution(* com.example.blog.controller.receptionController.role.*.*.*(..))")
+    @Synchronized
+    public void receptionControllerMethod(){}
+
+    @Before("adminControllerMethod(),receptionControllerMethod()")
     public void logRequestInfo(JoinPoint joinPoint){
         RequestAttributes requestAttribute = RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes)requestAttribute).getRequest();
@@ -53,6 +57,7 @@ public class LogAspect {
         //添加需要过滤的接口
         List<String > noToken = Lists.newArrayList();
         noToken.add("addUrlRoleToRedis");
+        noToken.add("addComment");
         //过滤接口
         if(!ParamUtil.equals(joinPoint.getSignature().getName(),noToken)){
             //接口之前,权限校验
@@ -87,7 +92,7 @@ public class LogAspect {
      */
     @AfterReturning(returning = "o", pointcut = "adminControllerMethod()")
     public void logResultInfo(Object o){
-        log.info("接口调用成功:返回结果=" + JSON.toJSONString(o));
+        log.info("后台接口调用成功:返回结果=" + JSON.toJSONString(o));
         log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
     }
 
@@ -100,8 +105,32 @@ public class LogAspect {
     public void doAfterThrowing(JoinPoint joinPoint, Exception e) {
         String methodName = joinPoint.getSignature().getName();
         List<Object> args = Arrays.asList(joinPoint.getArgs());
-        System.out.println("接口调用失败，连接点方法为：" + methodName + ",参数为：" + args + ",异常为：" + e);
+        System.out.println("后台接口调用失败，连接点方法为：" + methodName + ",参数为：" + args + ",异常为：" + e);
         log.info("----------------------------------------------------------接口调用结束----------------------------------------------------------");
+    }
+
+    /**
+     * 进入方法请求执行后
+     * @param o
+     * @throws Exception
+     */
+    @AfterReturning(returning = "o", pointcut = "receptionControllerMethod()")
+    public void reclogResultInfo(Object o){
+        log.info("前台接口调用成功:返回结果=" + JSON.toJSONString(o));
+        log.info("----------------------------------------------------------前台接口调用结束----------------------------------------------------------");
+    }
+
+    /**
+     * 该切面发生异常信息时进行拦截
+     * @param joinPoint
+     * @param e
+     */
+    @AfterThrowing(pointcut = "receptionControllerMethod()", throwing = "e")
+    public void recdoAfterThrowing(JoinPoint joinPoint, Exception e) {
+        String methodName = joinPoint.getSignature().getName();
+        List<Object> args = Arrays.asList(joinPoint.getArgs());
+        System.out.println("前台接口调用失败，连接点方法为：" + methodName + ",参数为：" + args + ",异常为：" + e);
+        log.info("----------------------------------------------------------前台接口调用结束----------------------------------------------------------");
     }
 
 }
