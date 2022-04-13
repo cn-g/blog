@@ -1,15 +1,18 @@
 package com.example.blog.controller.receptionController.home;
 
+import com.example.blog.dto.blog.request.AddOperateHistoryDto;
 import com.example.blog.dto.blog.request.KeyWordPageReqDto;
+import com.example.blog.dto.blog.response.QueryBlogUserResDto;
 import com.example.blog.dto.blog.response.QueryCommentResDto;
 import com.example.blog.dto.blog.response.QueryEssayResDto;
 import com.example.blog.dto.blog.response.ReEssayResDto;
 import com.example.blog.dto.home.response.*;
-import com.example.blog.entity.home.Channel;
 import com.example.blog.service.blog.CategoryService;
 import com.example.blog.service.blog.CommentService;
 import com.example.blog.service.blog.EssayService;
 import com.example.blog.service.home.*;
+import com.example.blog.service.user.OperateHistoryService;
+import com.example.blog.service.user.UserService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.base.PageIdReqDto;
@@ -19,9 +22,7 @@ import com.gcp.basicproject.response.ResponseModelDto;
 import com.gcp.basicproject.response.ResponseModels;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -51,6 +52,12 @@ public class ReceptionHomeController {
 
     @Resource
     private CommentService commentService;
+
+    @Resource
+    private OperateHistoryService operateHistoryService;
+
+    @Resource
+    private UserService userService;
 
     @GetMapping("/getChannelList")
     @ApiOperation("首页轮播图列表接口")
@@ -106,7 +113,20 @@ public class ReceptionHomeController {
         return ResponseModels.page2ResponseModel(commentService.getCommentPage(reqDto));
     }
 
-    public ResponseModelDto addFootprint(){
-
+    @PostMapping("/addOperateHistory")
+    @ApiOperation("添加用户操作历史(浏览、点赞、收藏)")
+    public ResponseModelDto addFootprint(@RequestBody AddOperateHistoryDto dto){
+        if(operateHistoryService.addOperateHistory(dto)){
+            return ResponseModels.ok();
+        }else{
+            return ResponseModels.commonException("添加用户操作历史失败");
+        }
     }
+
+    @GetMapping("/getUserDec")
+    @ApiOperation("博主详情")
+    public ResponseModelDto<QueryBlogUserResDto> getUserDec(IdRequestDto idRequestDto){
+        return ResponseModels.ok(userService.getUserDec(idRequestDto));
+    }
+
 }

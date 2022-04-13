@@ -24,4 +24,7 @@ public class AddOperateReqDto {
     @ApiModelProperty(value = "状态，0隐藏、1显示、9删除")
     private Integer status;
 
+    @ApiModelProperty(value = "操作编号")
+    private Integer operateNo;
+
 }

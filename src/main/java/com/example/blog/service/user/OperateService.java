@@ -9,6 +9,7 @@ import com.example.blog.dao.user.OperateMapper;
 import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.QueryOperateResDto;
 import com.example.blog.entity.user.Operate;
+import com.example.blog.enums.BlogStatusEnum;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.util.ParamUtil;
@@ -29,12 +30,22 @@ public class OperateService extends ServiceImpl<OperateMapper, Operate> {
      * @return
      */
     public Boolean addOperate(AddOperateReqDto reqDto){
+        checkOperate(reqDto.getOperateNo(),null);
         Operate operate = ToolsUtil.convertType(reqDto,Operate.class);
         operate.setId(ToolsUtil.getUUID());
         operate.setCreateTime(LocalDateTime.now());
         return baseMapper.insert(operate) > 0;
     }
 
+    private void checkOperate(Integer operateNo,String id){
+        Operate operate = baseMapper.selectOne(Wrappers.lambdaQuery(Operate.class)
+                .ne(ParamUtil.notEmpty(id),Operate::getId,id)
+                .ne(Operate::getStatus, BlogStatusEnum.DELETE.getCode())
+                .eq(Operate::getOperateNo,operateNo));
+        if(ParamUtil.notEmpty(operate)){
+            throw new CommonException("该编号已存在，请更换");
+        }
+    }
     /**
      * 分页查询操作
      * @param reqDto
@@ -51,7 +62,7 @@ public class OperateService extends ServiceImpl<OperateMapper, Operate> {
         if(ParamUtil.notEmpty(reqDto.getStatus())){
             queryWrapper.eq(Operate::getStatus,reqDto.getStatus());
         }
-        Page<Operate> operatePage = baseMapper.selectPage(reqDto.iPageInfo(), queryWrapper.ne(Operate::getStatus,9).orderByDesc(Operate::getCreateTime));
+        Page<Operate> operatePage = baseMapper.selectPage(reqDto.iPageInfo(), queryWrapper.ne(Operate::getStatus,BlogStatusEnum.DELETE.getCode()).orderByDesc(Operate::getCreateTime));
         IPage<QueryOperateResDto> queryOperateResDtoIPage = ToolsUtil.convertType(operatePage,QueryOperateResDto.class);
         return queryOperateResDtoIPage;
     }
@@ -75,6 +86,7 @@ public class OperateService extends ServiceImpl<OperateMapper, Operate> {
      * @return
      */
     public Boolean updateOperate(UpdateOperateReqDto reqDto){
+        checkOperate(reqDto.getOperateNo(),reqDto.getId());
         Operate operate = ToolsUtil.convertType(reqDto,Operate.class);
         operate.setUpdateTime(LocalDateTime.now());
         return baseMapper.updateById(operate) > 0;
@@ -90,9 +102,21 @@ public class OperateService extends ServiceImpl<OperateMapper, Operate> {
         if(ParamUtil.empty(operate)){
             return true;
         }
-        operate.setStatus(9);
+        operate.setStatus(BlogStatusEnum.DELETE.getCode());
         operate.setUpdateTime(LocalDateTime.now());
         return baseMapper.updateById(operate) > 0;
     }
 
+    /**
+     * 通过操作编号查询操作
+     * @param operateNo
+     * @return
+     */
+    public Operate getOperateByOperateNo(Integer operateNo){
+        Operate operate = baseMapper.selectOne(Wrappers.lambdaQuery(Operate.class).ne(Operate::getStatus,BlogStatusEnum.DELETE.getCode()).eq(Operate::getOperateNo,operateNo));
+        if(ParamUtil.empty(operate)){
+            throw new CommonException("未查询到该编号");
+        }
+        return operate;
+    }
 }

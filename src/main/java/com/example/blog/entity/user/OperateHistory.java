@@ -37,6 +37,10 @@ public class OperateHistory {
     @ApiModelProperty(value = "操作id")
     private String operateId;
 
+    @TableField(value = "operate_no")
+    @ApiModelProperty(value = "操作编号")
+    private Integer operateNo;
+
     @TableField(value = "status")
     @ApiModelProperty(value = "状态，0隐藏、1显示、9删除")
     private Integer status;
@@ -44,5 +48,9 @@ public class OperateHistory {
     @TableField(value = "create_time")
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
+
+    @TableField(value = "update_time")
+    @ApiModelProperty(value = "更新时间")
+    private LocalDateTime updateTime;
 
 }

@@ -7,10 +7,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.blog.EssayMapper;
 import com.example.blog.dto.StatisticBlogDto;
+import com.example.blog.dto.blog.BlogDto;
+import com.example.blog.dto.blog.response.QueryBlogUserResDto;
 import com.example.blog.dto.blog.response.ReEssayResDto;
 import com.example.blog.dto.user.response.QueryUserResDto;
 import com.example.blog.enums.BlogStatusEnum;
 import com.example.blog.enums.EssayLabelEnum;
+import com.example.blog.enums.OperateTypeEnum;
 import com.example.blog.service.user.UserService;
 import com.gcp.basicproject.base.IdAndNameDto;
 import com.example.blog.dto.blog.request.*;
@@ -20,6 +23,7 @@ import com.example.blog.entity.user.Account;
 import com.example.blog.service.user.AccountService;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.base.PageIdReqDto;
+import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.RequestUtil;
 import com.gcp.basicproject.util.ToolsUtil;
@@ -233,6 +237,50 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
 
     public IPage<ReEssayResDto> getEssayList(KeyWordPageReqDto reqDto){
         return baseMapper.getEssayByKeyWord(reqDto,reqDto.iPageInfo());
+    }
+
+    /**
+     * 修改博客统计数据
+     * @param blogId
+     * @param operateNo
+     * @param status
+     */
+    public void updateEssayStatistic(String blogId,Integer operateNo,Boolean status){
+        Essay essay = baseMapper.selectOne(Wrappers.lambdaQuery(Essay.class).eq(Essay::getId,blogId).ne(Essay::getStatus,BlogStatusEnum.DELETE.getCode()));
+        if(ParamUtil.empty(essay)){
+            throw new CommonException("未找到该博客");
+        }
+        if(operateNo.equals(OperateTypeEnum.BROWSE.getCode())){
+            essay.setViewNumber(essay.getViewNumber()+1);
+        }else if(operateNo.equals(OperateTypeEnum.GOOD.getCode())){
+            essay.setGoodNumber(essay.getGoodNumber()+(status?1:-1));
+        }else if(operateNo.equals(OperateTypeEnum.COLLECT.getCode())){
+            essay.setCollectNumber(essay.getCollectNumber()+(status?1:-1));
+        }else if(operateNo.equals(OperateTypeEnum.COMMENT.getCode())){
+            essay.setCommentNumber(essay.getCommentNumber()+(status?1:-1));
+        }else{
+            throw new CommonException("操作参数错误");
+        }
+        baseMapper.updateById(essay);
+    }
+
+    /**
+     * 获取用户发布的博客
+     * @param reqDto
+     * @return
+     */
+    public List<BlogDto> getUserEssay(IdRequestDto reqDto){
+        List<Essay> essayList = baseMapper.selectList(Wrappers.lambdaQuery(Essay.class).eq(Essay::getUserId,reqDto.getId())
+                .eq(Essay::getLabel,EssayLabelEnum.PUBLISH.getCode())
+                .eq(Essay::getStatus,BlogStatusEnum.ENABLE.getCode())
+                .orderByDesc(Essay::getPublishTime));
+        List<BlogDto> blogDtos =  Lists.newArrayList();
+        for (Essay essay : essayList) {
+            BlogDto blogDto = ToolsUtil.convertType(essay,BlogDto.class);
+            blogDto.setBlogId(essay.getId());
+            blogDtos.add(blogDto);
+        }
+        return blogDtos;
     }
 
 }

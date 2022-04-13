@@ -1,5 +1,6 @@
 package com.example.blog.dto.user.request;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.gcp.basicproject.base.IdRequestDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,5 +21,8 @@ public class UpdateOperateReqDto extends IdRequestDto {
 
     @ApiModelProperty(value = "状态，0禁用、1启用、9删除")
     private Integer status;
+
+    @ApiModelProperty(value = "操作编号")
+    private Integer operateNo;
 
 }

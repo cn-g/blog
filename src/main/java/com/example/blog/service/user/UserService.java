@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.user.UserMapper;
+import com.example.blog.dto.blog.BlogDto;
+import com.example.blog.dto.blog.response.QueryBlogUserResDto;
 import com.example.blog.dto.home.request.AddUserRecommendReqDto;
 import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.*;
@@ -17,12 +19,14 @@ import com.example.blog.enums.BlogStatusEnum;
 import com.example.blog.service.blog.CategoryService;
 import com.example.blog.service.blog.EssayService;
 import com.gcp.basicproject.base.AbstractPageableSearchDto;
+import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.response.CommonException;
 import com.gcp.basicproject.util.FastJsonUtil;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import com.google.common.collect.Lists;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -162,6 +166,29 @@ public class UserService extends ServiceImpl<UserMapper, User>{
     public Map<String,User> getUserMap(){
         List<User> userList = baseMapper.selectList(Wrappers.lambdaQuery(User.class).eq(User::getStatus,BlogStatusEnum.ENABLE.getCode()));
         return userList.stream().collect(Collectors.toMap(User::getId, Function.identity()));
+    }
+
+    public QueryBlogUserResDto getUserDec(IdRequestDto idRequestDto){
+        AccountResDto accountResDto = accountService.getAccount(idRequestDto);
+        QueryBlogUserResDto resDto = ToolsUtil.convertType(accountResDto,QueryBlogUserResDto.class);
+        resDto.setName(accountResDto.getAccount());
+        resDto.setUserId(accountResDto.getId());
+        resDto.setUserPicUrl(accountResDto.getPicUrl());
+        resDto.setUserSynopsis(accountResDto.getSynopsis());
+        List<BlogDto> essayList = essayService.getUserEssay(idRequestDto);
+        Integer goodNumber = 0;
+        Integer collectNumber = 0;
+        Integer viewNumber = 0;
+        for (BlogDto blogDto : essayList) {
+            goodNumber = goodNumber + blogDto.getGoodNumber();
+            collectNumber = collectNumber + blogDto.getCollectNumber();
+            viewNumber = viewNumber + blogDto.getViewNumber();
+        }
+        resDto.setGoodNumber(goodNumber);
+        resDto.setCollectNumber(collectNumber);
+        resDto.setViewNumber(viewNumber);
+        resDto.setEssayList(essayList);
+        return resDto;
     }
 
 }

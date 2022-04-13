@@ -7,12 +7,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.blog.CommentMapper;
 import com.example.blog.dto.blog.request.AddCommentReqDto;
+import com.example.blog.dto.blog.request.AddOperateHistoryDto;
 import com.example.blog.dto.blog.response.QueryCommentResDto;
 import com.example.blog.entity.blog.Comment;
 import com.example.blog.entity.user.Account;
 import com.example.blog.entity.user.User;
 import com.example.blog.enums.BlogStatusEnum;
+import com.example.blog.enums.OperateTypeEnum;
 import com.example.blog.service.user.AccountService;
+import com.example.blog.service.user.OperateHistoryService;
 import com.example.blog.service.user.UserService;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.base.PageIdReqDto;
@@ -21,6 +24,7 @@ import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.RequestUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import com.google.common.collect.Lists;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,6 +45,14 @@ public class CommentService extends ServiceImpl<CommentMapper, Comment> {
     @Resource
     private AccountService accountService;
 
+    @Resource
+    private OperateHistoryService operateHistoryService;
+
+    /**
+     * 添加评论
+     * @param reqDto
+     * @return
+     */
     public Boolean addComment(AddCommentReqDto reqDto){
         Comment comment = ToolsUtil.convertType(reqDto,Comment.class);
         if(ParamUtil.empty(comment.getReplyId())){
@@ -52,6 +64,10 @@ public class CommentService extends ServiceImpl<CommentMapper, Comment> {
         comment.setId(ToolsUtil.getUUID());
         comment.setCreateTime(LocalDateTime.now());
         comment.setStatus(BlogStatusEnum.ENABLE.getCode());
+        AddOperateHistoryDto dto = new AddOperateHistoryDto();
+        dto.setOperateNo(OperateTypeEnum.COMMENT.getCode());
+        dto.setBlogId(reqDto.getBlogId());
+        operateHistoryService.addOperateHistory(dto);
         return baseMapper.insert(comment) > 0;
     }
 

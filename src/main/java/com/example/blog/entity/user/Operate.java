@@ -33,6 +33,10 @@ public class Operate {
     @ApiModelProperty(value = "操作描述")
     private String operateDesc;
 
+    @TableField(value = "operate_no")
+    @ApiModelProperty(value = "操作编号")
+    private Integer operateNo;
+
     @TableField(value = "status")
     @ApiModelProperty(value = "状态，0隐藏、1显示、9删除")
     private Integer status;
