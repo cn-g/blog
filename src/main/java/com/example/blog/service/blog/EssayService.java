@@ -214,7 +214,7 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
         if(ParamUtil.notEmpty(reqDto.getId())){
             queryWrapper.eq(Essay::getCategoryId,reqDto.getId());
         }else{
-            if(ParamUtil.notEmpty(RequestUtil.getUserId())){
+            if(ParamUtil.notEmpty(RequestUtil.getUserId()) && !"null".equals(RequestUtil.getUserId())){
                 QueryUserResDto queryUserResDto = userService.getUser(new IdRequestDto().setId(RequestUtil.getUserId()));
                 if(ParamUtil.notEmpty(queryUserResDto.getCategories())){
                     queryWrapper.in(Essay::getCategoryId,queryUserResDto.getCategories());

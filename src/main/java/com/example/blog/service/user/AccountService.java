@@ -147,10 +147,12 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
         accountResDto.setEssayNumber(essayService.getNumber().getEssayNumber());
         accountResDto.setUserNumber(baseMapper.getUserNumber());
         List<IdAndNameDto> nameList = Lists.newArrayList();
-        for (String category : resDto.getCategories()) {
-            nameList.add(new IdAndNameDto().setId(category).setName(categoryService.getById(category).getName()));
+        if(ParamUtil.notEmpty(resDto.getCategories())){
+            for (String category : resDto.getCategories()) {
+                nameList.add(new IdAndNameDto().setId(category).setName(categoryService.getById(category).getName()));
+            }
+            accountResDto.setCategoryList(nameList);
         }
-        accountResDto.setCategoryList(nameList);
         return accountResDto;
     }
 
@@ -203,7 +205,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
      * @return
      */
     public List<IdAndNameDto> getAccountData(String name){
-        List<Account> accountList = baseMapper.selectList(Wrappers.lambdaQuery(Account.class).eq(Account::getStatus,BlogStatusEnum.ENABLE.getCode()).like(Account::getAccount,name));
+        List<Account> accountList = baseMapper.selectList(Wrappers.lambdaQuery(Account.class).eq(Account::getStatus,BlogStatusEnum.ENABLE.getCode()).like(ParamUtil.notEmpty(name),Account::getAccount,name));
         List<IdAndNameDto> list = Lists.newArrayList();
         accountList.forEach(a->{
             list.add(new IdAndNameDto().setId(a.getId()).setName(a.getAccount()));

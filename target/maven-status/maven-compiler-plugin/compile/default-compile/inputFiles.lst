@@ -1,4 +1,5 @@
 D:\blog-gcp\blog\src\main\java\com\example\blog\service\blog\ThingService.java
+D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\BlogDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\request\QueryRecommendReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\request\AddUserReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\controller\adminController\blog\CategoryController.java
@@ -23,7 +24,6 @@ D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\request\AddSearchReqDto
 D:\blog-gcp\blog\src\main\java\com\example\blog\entity\user\Url.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\request\UpdateEssayReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\request\UpdateRecommendReqDto.java
-D:\blog-gcp\blog\src\main\java\com\example\blog\controller\receptionController\user\ReceptionUserController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\request\UpdateSearchReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\service\home\UserRecommendService.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\controller\adminController\blog\EssayController.java
@@ -33,6 +33,7 @@ D:\blog-gcp\blog\src\main\java\com\example\blog\service\user\UrlService.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\controller\adminController\user\AccountController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\request\AddUrlReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\response\QueryAccountResDto.java
+D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\request\AddOperateHistoryDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\response\QueryUserResDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\service\user\UserService.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\service\blog\EssayService.java
@@ -43,10 +44,12 @@ D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\request\AddCommentReqDt
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\request\UpdateHistoryReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dao\home\ChannelMapper.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\BlogApplication.java
+D:\blog-gcp\blog\src\main\java\com\example\blog\controller\receptionController\role\blog\ReceptionBlogController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\request\UpdateCategoryReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\response\QueryRoleResDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\entity\blog\Essay.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dao\user\OperateMapper.java
+D:\blog-gcp\blog\src\main\java\com\example\blog\controller\receptionController\login\LoginController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\response\QueryRecommendResDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\entity\user\OperateHistory.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dao\blog\EssayMapper.java
@@ -59,6 +62,7 @@ D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\response\QueryEssayResD
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\request\AddOperateReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\request\AddCategoryReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\controller\adminController\home\HistoryController.java
+D:\blog-gcp\blog\src\main\java\com\example\blog\controller\receptionController\role\user\ReceptionUserController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\service\home\ChannelService.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\entity\home\Search.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\controller\adminController\blog\CommentController.java
@@ -76,6 +80,7 @@ D:\blog-gcp\blog\src\main\java\com\example\blog\dao\user\AccountMapper.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\request\AddHistoryReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\enums\UserTypeEnum.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\configure\QCloudCosUtilsConfig.java
+D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\response\QueryBlogUserResDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\request\QueryRoleReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\entity\user\Operate.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\request\UpdateUserReqDto.java
@@ -92,15 +97,14 @@ D:\blog-gcp\blog\src\main\java\com\example\blog\dao\home\UserRecommendMapper.jav
 D:\blog-gcp\blog\src\main\java\com\example\blog\controller\adminController\user\RoleController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\controller\adminController\user\UserController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\configure\MyBatisConfigure.java
-D:\blog-gcp\blog\src\main\java\com\example\blog\controller\login\LoginController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\controller\adminController\blog\ThingController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\entity\blog\Category.java
+D:\blog-gcp\blog\src\main\java\com\example\blog\enums\OperateTypeEnum.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\service\home\RecommendService.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\request\AddRecommendReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\blog\request\AddEssayReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\request\QueryChannelReqDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dao\blog\CategoryMapper.java
-D:\blog-gcp\blog\src\main\java\com\example\blog\controller\receptionController\blog\ReceptionBlogController.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\response\QueryChannelResDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\home\response\QuerySearchResDto.java
 D:\blog-gcp\blog\src\main\java\com\example\blog\dto\user\request\QueryUrlReqDto.java

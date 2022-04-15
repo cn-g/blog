@@ -107,10 +107,12 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         QueryUserResDto queryUserResDto = ToolsUtil.convertType(user,QueryUserResDto.class);
         queryUserResDto.setCategories(FastJsonUtil.toList(user.getCategories(),String.class));
         List<String> nameList = Lists.newArrayList();
-        for (String category : queryUserResDto.getCategories()) {
-            nameList.add(categoryService.getById(category).getName());
+        if(ParamUtil.notEmpty(queryUserResDto.getCategories())){
+            for (String category : queryUserResDto.getCategories()) {
+                nameList.add(categoryService.getById(category).getName());
+            }
+            queryUserResDto.setCategoryName(String.join(",",nameList));
         }
-        queryUserResDto.setCategoryName(String.join(",",nameList));
         return queryUserResDto;
     }
 
