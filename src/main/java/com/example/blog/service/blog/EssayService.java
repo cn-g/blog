@@ -10,6 +10,7 @@ import com.example.blog.dto.StatisticBlogDto;
 import com.example.blog.dto.blog.BlogDto;
 import com.example.blog.dto.blog.response.QueryBlogUserResDto;
 import com.example.blog.dto.blog.response.ReEssayResDto;
+import com.example.blog.dto.user.response.AccountResDto;
 import com.example.blog.dto.user.response.QueryUserResDto;
 import com.example.blog.enums.BlogStatusEnum;
 import com.example.blog.enums.EssayLabelEnum;
@@ -227,8 +228,9 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
         IPage<QueryEssayResDto> queryEssayResDtoIPage = ToolsUtil.convertType(essayPage,QueryEssayResDto.class);
         int i = 0;
         for (QueryEssayResDto record : queryEssayResDtoIPage.getRecords()) {
-            record.setName(accountService.getAccount(new IdRequestDto().setId(record.getUserId())).getAccount());
-            record.setUserPicUrl(userService.getUser(new IdRequestDto().setId(record.getUserId())).getPicUrl());
+            AccountResDto account = accountService.getAccount(new IdRequestDto().setId(record.getUserId()));
+            record.setName(account.getAccount());
+            record.setUserPicUrl(account.getPicUrl());
             queryEssayResDtoIPage.getRecords().set(i,record);
             i++;
         }

@@ -15,6 +15,7 @@ import com.example.blog.service.user.AccountService;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.base.WebBaseUrl;
 import com.gcp.basicproject.util.ParamUtil;
+import com.gcp.basicproject.util.RequestUtil;
 import com.gcp.basicproject.util.ToolsUtil;
 import org.springframework.stereotype.Service;
 
@@ -103,8 +104,17 @@ public class HistoryService extends ServiceImpl<HistoryMapper, History> {
      * @return
      */
     public List<QueryHistoryResDto> getHistoryList(){
-        List<History> historyList = baseMapper.selectList(Wrappers.lambdaQuery(History.class).eq(History::getStatus, BlogStatusEnum.ENABLE.getCode()).orderByDesc(History::getCreateTime).last("limit 10"));
+        List<History> historyList = baseMapper.selectList(Wrappers.lambdaQuery(History.class).eq(History::getStatus, BlogStatusEnum.ENABLE.getCode()).eq(History::getBlogUserId, RequestUtil.getUserId()).orderByDesc(History::getCreateTime).last("limit 10"));
         return ToolsUtil.convertType(historyList,QueryHistoryResDto.class);
+    }
+
+    /**
+     * 清空历史记录
+     */
+    public void cleanHistory(){
+        History history = new History();
+        history.setStatus(BlogStatusEnum.DELETE.getCode());
+        baseMapper.update(history,Wrappers.lambdaUpdate(History.class).eq(History::getBlogUserId, RequestUtil.getUserId()).ne(History::getStatus,BlogStatusEnum.DELETE.getCode()));
     }
 
 }

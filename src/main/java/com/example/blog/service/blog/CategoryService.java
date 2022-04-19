@@ -16,6 +16,7 @@ import com.gcp.basicproject.base.IdAndNameDto;
 import com.gcp.basicproject.base.IdRequestDto;
 import com.gcp.basicproject.util.ParamUtil;
 import com.gcp.basicproject.util.ToolsUtil;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -97,8 +98,11 @@ public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
      */
     public List<IdAndNameDto> getCategoryData(){
         LambdaQueryWrapper<Category> queryWrapper = Wrappers.lambdaQuery(Category.class);
+        List<IdAndNameDto> idAndNameDtos = Lists.newArrayList();
+        idAndNameDtos.add(new IdAndNameDto().setName("推荐"));
         List<Category> categoryList = baseMapper.selectList(queryWrapper.eq(Category::getStatus, BlogStatusEnum.ENABLE.getCode()).last("limit 8"));
-        return ToolsUtil.convertType(categoryList,IdAndNameDto.class);
+        idAndNameDtos.addAll(ToolsUtil.convertType(categoryList,IdAndNameDto.class));
+        return idAndNameDtos;
     }
 
 }
