@@ -29,12 +29,8 @@ public class EssayController {
 
     @PostMapping("/addEssay")
     @ApiOperation("添加博客接口")
-    public ResponseModelDto addEssay(@RequestBody AddEssayReqDto reqDto){
-        if(essayService.addEssay(reqDto)){
-            return ResponseModels.ok();
-        }else{
-            return ResponseModels.commonException("添加博客失败");
-        }
+    public ResponseModelDto<String> addEssay(@RequestBody AddEssayReqDto reqDto){
+        return ResponseModels.ok(essayService.addEssay(reqDto));
     }
 
     @PostMapping("/updateEssay")

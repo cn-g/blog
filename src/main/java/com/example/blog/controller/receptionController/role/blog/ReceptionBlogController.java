@@ -40,7 +40,7 @@ public class ReceptionBlogController {
     }
 
     @PostMapping("/deleteComment")
-    @ApiOperation("发布评论接口")
+    @ApiOperation("删除评论接口")
     public ResponseModelDto deleteComment(@RequestBody IdRequestDto reqDto){
         if(commentService.deleteComment(reqDto)){
             return ResponseModels.ok();

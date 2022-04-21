@@ -87,6 +87,7 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
         AddUserReqDto reqDto1 = new AddUserReqDto();
         reqDto1.setId(id);
         reqDto1.setPicUrl(picUrl);
+        reqDto1.setRealName("未知");
         reqDto1.setStatus(BlogStatusEnum.ENABLE.getCode());
         reqDto1.setSynopsis("还没有填写简介哦~");
         reqDto1.setAreaName("未知地点");

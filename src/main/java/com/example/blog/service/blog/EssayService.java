@@ -59,14 +59,21 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
      * @param reqDto
      * @return
      */
-    public Boolean addEssay(AddEssayReqDto reqDto){
+    public String addEssay(AddEssayReqDto reqDto){
+        if(ParamUtil.notEmpty(reqDto.getId())){
+            UpdateEssayReqDto updateEssayReqDto = ToolsUtil.convertType(reqDto,UpdateEssayReqDto.class);
+            updateEssay(updateEssayReqDto);
+            return reqDto.getId();
+        }
+        String id = ToolsUtil.getUUID();
         Essay essay = ToolsUtil.convertType(reqDto,Essay.class);
-        essay.setId(ToolsUtil.getUUID());
+        essay.setId(id);
         essay.setCreateTime(LocalDateTime.now());
         if(reqDto.getLabel() == 1){
             essay.setPublishTime(LocalDateTime.now());
         }
-        return baseMapper.insert(essay) > 0;
+        baseMapper.insert(essay);
+        return id;
     }
 
     /**
@@ -133,10 +140,14 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
      */
     public QueryEssayResDto getEssay(IdRequestDto reqDto){
         Essay essay = baseMapper.selectById(reqDto.getId());
+        if(!essay.getLabel().equals(EssayLabelEnum.PUBLISH.getCode())){
+            throw new CommonException("查询博客失败");
+        }
         QueryEssayResDto queryEssayResDto = ToolsUtil.convertType(essay,QueryEssayResDto.class);
         queryEssayResDto.setName(accountService.getAccount(new IdRequestDto().setId(queryEssayResDto.getUserId())).getAccount());
         QueryUserResDto queryUserResDto = userService.getUser(new IdRequestDto().setId(queryEssayResDto.getUserId()));
         queryEssayResDto.setSex(queryUserResDto.getSex());
+        queryEssayResDto.setCategoryName(categoryService.getById(queryEssayResDto.getCategoryId()).getName());
         queryEssayResDto.setBirthday(queryUserResDto.getBirthday());
         queryEssayResDto.setAreaName(queryUserResDto.getAreaName());
         queryEssayResDto.setUserSynopsis(queryUserResDto.getSynopsis());
@@ -202,6 +213,7 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
             idAndNameDto.setName(BigDecimal.valueOf(b.size()).divide(BigDecimal.valueOf(num),4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).toString().split("00")[0]);
             idAndNameDtos.add(idAndNameDto);
         });
+
         return idAndNameDtos;
     }
 

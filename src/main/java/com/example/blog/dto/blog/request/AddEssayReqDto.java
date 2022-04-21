@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 @ApiModel("添加博客入参类")
 public class AddEssayReqDto {
 
+    @ApiModelProperty(value = "id")
+    private String id;
+
     @ApiModelProperty(value = "用户id")
     private String userId;
 

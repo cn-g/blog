@@ -43,6 +43,9 @@ public class QueryEssayResDto {
     @ApiModelProperty(value = "类目id")
     private String categoryId;
 
+    @ApiModelProperty(value = "类目名称")
+    private String categoryName;
+
     @ApiModelProperty(value = "博客链接地址")
     private String blogUrl;
 

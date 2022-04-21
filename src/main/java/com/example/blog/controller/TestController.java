@@ -31,4 +31,10 @@ public class TestController {
         return ResponseModels.ok(qCloudCosUtils.upload(file));
     }
 
+    @ApiOperation(value = "上传文件返回url")
+    @PostMapping("/uploadFile")
+    public ResponseModelDto<String> uploadFile(@RequestParam("file") File file){
+        return ResponseModels.ok(qCloudCosUtils.upload(file));
+    }
+
 }

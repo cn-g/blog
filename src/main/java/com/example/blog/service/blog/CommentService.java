@@ -61,6 +61,7 @@ public class CommentService extends ServiceImpl<CommentMapper, Comment> {
         if(ParamUtil.empty(comment.getReplyUserId())){
             comment.setReplyUserId(null);
         }
+        comment.setUserId(RequestUtil.getUserId());
         comment.setId(ToolsUtil.getUUID());
         comment.setCreateTime(LocalDateTime.now());
         comment.setStatus(BlogStatusEnum.ENABLE.getCode());
