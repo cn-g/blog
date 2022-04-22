@@ -94,8 +94,11 @@ public class CommentService extends ServiceImpl<CommentMapper, Comment> {
             queryCommentResDto.setName(accountMap.get(queryCommentResDto.getUserId()).getAccount());
             List<QueryCommentResDto> list = commentMap.get(queryCommentResDto.getId());
             List<QueryCommentResDto> newList = Lists.newArrayList();
-            newList.addAll(list);
-            queryCommentResDto.setChildComment(getChildComment(commentMap,list,newList));
+            if(ParamUtil.notEmpty(list)){
+                newList.addAll(list);
+                queryCommentResDto.setChildComment(getChildComment(commentMap,list,newList));
+            }
+            queryCommentResDto.setInputShow(false);
             queryCommentResDtoIPage.getRecords().set(i,queryCommentResDto);
             i++;
         }
@@ -135,6 +138,7 @@ public class CommentService extends ServiceImpl<CommentMapper, Comment> {
         for (QueryCommentResDto queryCommentResDto : queryCommentResDtoList) {
             queryCommentResDto.setReplyUserName(accountMap.get(queryCommentResDto.getReplyUserId()).getAccount());
             queryCommentResDto.setName(accountMap.get(queryCommentResDto.getUserId()).getAccount());
+            queryCommentResDto.setInputShow(false);
             queryCommentResDtoList.set(i,queryCommentResDto);
             i++;
         }

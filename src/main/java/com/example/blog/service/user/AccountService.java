@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.blog.dao.user.AccountMapper;
+import com.example.blog.dto.StatisticBlogDto;
 import com.example.blog.dto.user.request.*;
 import com.example.blog.dto.user.response.*;
 import com.example.blog.entity.user.Account;
@@ -144,8 +145,9 @@ public class AccountService extends ServiceImpl<AccountMapper, Account> {
         accountResDto.setAreaName(resDto.getAreaName());
         accountResDto.setSex(resDto.getSex());
         accountResDto.setRoleName(roleService.getRole(accountResDto.getRoleId()).getName());
-        accountResDto.setViewNumber(essayService.getNumber().getViewNumber());
-        accountResDto.setEssayNumber(essayService.getNumber().getEssayNumber());
+        StatisticBlogDto statisticBlogDto = essayService.getNumber();
+        accountResDto.setViewNumber(statisticBlogDto.getViewNumber());
+        accountResDto.setEssayNumber(statisticBlogDto.getEssayNumber());
         accountResDto.setUserNumber(baseMapper.getUserNumber());
         List<IdAndNameDto> nameList = Lists.newArrayList();
         if(ParamUtil.notEmpty(resDto.getCategories())){

@@ -13,4 +13,6 @@ public class KeyWordPageReqDto extends AbstractPageableSearchDto {
 
     private String keyWord;
 
+    private String id;
+
 }

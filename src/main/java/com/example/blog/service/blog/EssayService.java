@@ -72,6 +72,10 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
         if(reqDto.getLabel() == 1){
             essay.setPublishTime(LocalDateTime.now());
         }
+        essay.setGoodNumber(0);
+        essay.setViewNumber(0);
+        essay.setCommentNumber(0);
+        essay.setCollectNumber(0);
         baseMapper.insert(essay);
         return id;
     }
@@ -140,6 +144,20 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
      */
     public QueryEssayResDto getEssay(IdRequestDto reqDto){
         Essay essay = baseMapper.selectById(reqDto.getId());
+        if(ParamUtil.empty(essay)){
+            AccountResDto accountResDto = accountService.getAccount(reqDto);
+            if(ParamUtil.empty(accountResDto)){
+                throw new CommonException("查询失败");
+            }
+            QueryEssayResDto queryEssayResDto = new QueryEssayResDto();
+            queryEssayResDto.setName(accountResDto.getAccount());
+            queryEssayResDto.setSex(accountResDto.getSex());
+            queryEssayResDto.setBirthday(accountResDto.getBirthday());
+            queryEssayResDto.setAreaName(accountResDto.getAreaName());
+            queryEssayResDto.setUserSynopsis(accountResDto.getSynopsis());
+            queryEssayResDto.setUserPicUrl(accountResDto.getPicUrl());
+            return queryEssayResDto;
+        }
         if(!essay.getLabel().equals(EssayLabelEnum.PUBLISH.getCode())){
             throw new CommonException("查询博客失败");
         }

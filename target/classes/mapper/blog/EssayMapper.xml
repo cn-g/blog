@@ -35,6 +35,9 @@
             or e.synopsis like CONCAT('%',#{dto.keyWord},'%')
             or a.account like CONCAT('%',#{dto.keyWord},'%'))
         </if>
+        <if test="dto.id != null and dto.id != ''">
+            and e._id &lt;&gt; #{dto.id}
+        </if>
         and e.status = 1 and a.status = 1
         order by e.view_number desc
     </select>

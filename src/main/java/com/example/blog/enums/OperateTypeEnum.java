@@ -12,6 +12,7 @@ public enum OperateTypeEnum {
     BROWSE(0,"浏览"),
     GOOD(1,"点赞"),
     COLLECT(2,"收藏"),
+    SEARCH(4,"搜索"),
     COMMENT(3,"评论");
 
     private Integer code;
