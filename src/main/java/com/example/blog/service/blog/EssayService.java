@@ -158,18 +158,22 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
             queryEssayResDto.setUserPicUrl(accountResDto.getPicUrl());
             return queryEssayResDto;
         }
-        if(!essay.getLabel().equals(EssayLabelEnum.PUBLISH.getCode())){
-            throw new CommonException("查询博客失败");
+        if(!RequestUtil.getUserId().equals(essay.getUserId())){
+            if(!essay.getLabel().equals(EssayLabelEnum.PUBLISH.getCode())){
+                throw new CommonException("查询博客失败");
+            }
         }
         QueryEssayResDto queryEssayResDto = ToolsUtil.convertType(essay,QueryEssayResDto.class);
-        queryEssayResDto.setName(accountService.getAccount(new IdRequestDto().setId(queryEssayResDto.getUserId())).getAccount());
-        QueryUserResDto queryUserResDto = userService.getUser(new IdRequestDto().setId(queryEssayResDto.getUserId()));
-        queryEssayResDto.setSex(queryUserResDto.getSex());
-        queryEssayResDto.setCategoryName(categoryService.getById(queryEssayResDto.getCategoryId()).getName());
-        queryEssayResDto.setBirthday(queryUserResDto.getBirthday());
-        queryEssayResDto.setAreaName(queryUserResDto.getAreaName());
-        queryEssayResDto.setUserSynopsis(queryUserResDto.getSynopsis());
-        queryEssayResDto.setUserPicUrl(queryUserResDto.getPicUrl());
+        if(essay.getLabel().equals(EssayLabelEnum.PUBLISH.getCode())){
+            queryEssayResDto.setName(accountService.getAccount(new IdRequestDto().setId(queryEssayResDto.getUserId())).getAccount());
+            QueryUserResDto queryUserResDto = userService.getUser(new IdRequestDto().setId(queryEssayResDto.getUserId()));
+            queryEssayResDto.setSex(queryUserResDto.getSex());
+            queryEssayResDto.setCategoryName(categoryService.getById(queryEssayResDto.getCategoryId()).getName());
+            queryEssayResDto.setBirthday(queryUserResDto.getBirthday());
+            queryEssayResDto.setAreaName(queryUserResDto.getAreaName());
+            queryEssayResDto.setUserSynopsis(queryUserResDto.getSynopsis());
+            queryEssayResDto.setUserPicUrl(queryUserResDto.getPicUrl());
+        }
         return queryEssayResDto;
     }
 
@@ -306,6 +310,24 @@ public class EssayService extends ServiceImpl<EssayMapper, Essay> {
                 .eq(Essay::getLabel,EssayLabelEnum.PUBLISH.getCode())
                 .eq(Essay::getStatus,BlogStatusEnum.ENABLE.getCode())
                 .orderByDesc(Essay::getPublishTime));
+        List<BlogDto> blogDtos =  Lists.newArrayList();
+        for (Essay essay : essayList) {
+            BlogDto blogDto = ToolsUtil.convertType(essay,BlogDto.class);
+            blogDto.setBlogId(essay.getId());
+            blogDtos.add(blogDto);
+        }
+        return blogDtos;
+    }
+
+    /**
+     * 获取用户的博客
+     * @param reqDto
+     * @return
+     */
+    public List<BlogDto> getUserAllEssay(IdRequestDto reqDto){
+        List<Essay> essayList = baseMapper.selectList(Wrappers.lambdaQuery(Essay.class).eq(Essay::getUserId,reqDto.getId())
+                .eq(Essay::getStatus,BlogStatusEnum.ENABLE.getCode())
+                .orderByDesc(Essay::getCreateTime));
         List<BlogDto> blogDtos =  Lists.newArrayList();
         for (Essay essay : essayList) {
             BlogDto blogDto = ToolsUtil.convertType(essay,BlogDto.class);
